@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Compagnia — Voordat</title>
+<meta name="description" content="Per guidare il tuo utilizzo sui social. Ter begeleiding van je social-app gebruik.">
+<meta property="og:site_name" content="Compagnia">
+<meta property="og:title" content="Compagnia">
+<meta property="og:description" content="Per guidare il tuo utilizzo sui social. Ter begeleiding van je social-app gebruik.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Compagnia">
+<meta name="twitter:description" content="Per guidare il tuo utilizzo sui social. Ter begeleiding van je social-app gebruik.">
+<meta name="apple-mobile-web-app-title" content="Compagnia">
+<meta name="theme-color" content="#0d0f14">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0f14;
+    --bg-2:#14171f;
+    --panel:#191d27;
+    --line:#262b38;
+    --ink:#e9e7e0;
+    --ink-dim:#9a9fae;
+    --ink-faint:#5c6273;
+    --accent:#e8a34c;
+    --accent-dim:#8a5f2a;
+    --night:#1c2440;
+    --danger:#c96a5a;
+    --ok:#7fae8e;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    -webkit-tap-highlight-color:transparent;
+    transition:background 1.2s ease;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; margin:0;}
+  .app{
+    max-width:520px;
+    margin:0 auto;
+    width:100%;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding-bottom:78px;
+  }
+  header{
+    padding:22px 20px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  header .eyebrow{
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:6px;
+  }
+  header h1{font-size:26px; letter-spacing:-.01em;}
+  .lang-row{
+    display:flex; gap:8px; margin-top:14px;
+  }
+  .lang-btn{
+    width:38px; height:32px;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:9px; font-size:17px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    padding:0; line-height:1;
+  }
+  .lang-btn.active{border-color:var(--accent); background:rgba(232,163,76,.1);}
+  .purpose-blurb{
+    margin-top:16px;
+    font-size:13px;
+    line-height:1.6;
+    color:var(--ink-dim);
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  main{flex:1; padding:20px; display:none;}
+  main.active{display:block;}
+
+  /* ---------- START ---------- */
+  .field-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--ink-faint); margin:22px 0 10px;
+  }
+  .field-label:first-child{margin-top:0;}
+  .grid-choices{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    padding:10px 16px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:999px;
+    color:var(--ink-dim);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .chip.selected{
+    border-color:var(--accent);
+    color:var(--accent);
+    background:rgba(232,163,76,.08);
+  }
+  .platform-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .platform-card{
+    padding:14px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    cursor:pointer;
+    display:flex; align-items:center; gap:10px;
+    font-size:14px;
+  }
+  .platform-card.selected{border-color:var(--accent); background:rgba(232,163,76,.08);}
+  .dot{width:9px; height:9px; border-radius:50%; flex-shrink:0;}
+  .custom-min{
+    display:flex; align-items:center; gap:10px; margin-top:10px;
+  }
+  .custom-min input{
+    width:70px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; color:var(--ink); font-family:'IBM Plex Mono';
+    padding:9px 10px; font-size:14px;
+  }
+  .start-btn{
+    width:100%; margin-top:30px; padding:16px;
+    background:var(--accent); color:#181205; border:none;
+    border-radius:var(--radius); font-family:'Fraunces', serif;
+    font-weight:600; font-size:17px; cursor:pointer;
+  }
+  .start-btn:disabled{background:var(--line); color:var(--ink-faint);}
+  .hint{font-size:12.5px; color:var(--ink-faint); line-height:1.5; margin-top:8px;}
+  .tip-card{
+    margin-top:22px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:var(--radius);
+    padding:14px 16px;
+  }
+  .tip-card-label{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:8px;}
+  .tip-card-text{font-size:13.5px; color:var(--ink-dim); line-height:1.55;}
+  .tip-card-link{
+    display:inline-block; margin-top:10px; font-size:12.5px;
+    color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent-dim);
+  }
+  .tip-card.empty{display:none;}
+  .notif-status{
+    margin-top:18px; padding:12px 14px;
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--ink-dim);
+  }
+  .notif-status.granted{border-color:var(--ok);}
+  .notif-status.needs-action{
+    border-color:var(--danger);
+    background:rgba(201,106,90,.1);
+    animation:notifPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes notifPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(201,106,90,.35);}
+    50%{box-shadow:0 0 0 6px rgba(201,106,90,0);}
+  }
+  .notif-status button{
+    margin-left:auto; background:var(--accent); color:#181205; border:none;
+    padding:7px 13px; border-radius:999px; font-family:'IBM Plex Mono'; font-size:12px; cursor:pointer;
+  }
+  .start-btn.confirm-pending{background:var(--danger); color:#20100c;}
+
+  /* ---------- TTS / TOEGANKELIJKHEID ---------- */
+  #ttsBtn{
+    position:fixed; right:16px; bottom:88px; z-index:45;
+    width:52px; height:52px; border-radius:50%;
+    background:var(--accent); color:#181205; border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  #ttsBtn.speaking{background:var(--danger); color:#20100c;}
+  #ttsBtn:focus-visible{outline:2px solid var(--ink); outline-offset:3px;}
+
+  /* ---------- INTEGRITEIT-BLOKKADE ---------- */
+  #blockScreen{
+    position:fixed; inset:0; z-index:999; display:none;
+    background:#0a0b0e; color:#e9e7e0;
+    align-items:center; justify-content:center; text-align:center;
+    padding:40px; font-family:'IBM Plex Mono', monospace;
+  }
+  #blockScreen.active{display:flex; flex-direction:column;}
+  #blockScreen h2{font-family:'Fraunces', serif; margin-bottom:10px;}
+  #blockScreen p{color:#9a9fae; font-size:13px; max-width:320px; line-height:1.6;}
+
+  /* Onzichtbaar voor zienden, wel voorgelezen door TTS/screenreader */
+  .tts-only{
+    display:block;
+    color:transparent;
+    font-size:1px;
+    line-height:1px;
+    height:1px;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+
+  /* ---------- SESSIE (overlay) ---------- */
+  #sessieOverlay{
+    position:fixed; inset:0; z-index:50;
+    display:none;
+    flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding:30px;
+    transition:background 1.5s ease;
+  }
+  #sessieOverlay.active{display:flex;}
+  .timer-ring{
+    width:220px; height:220px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:conic-gradient(var(--accent) calc(var(--pct,0)*1%), rgba(255,255,255,.08) 0);
+    margin-bottom:26px;
+    transition:background 1s linear;
+  }
+  .timer-inner{
+    width:186px; height:186px; border-radius:50%;
+    background:var(--bg-2);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .timer-big{font-family:'Fraunces', serif; font-size:44px; font-weight:600;}
+  .timer-sub{font-size:12px; color:var(--ink-faint); margin-top:4px; text-transform:uppercase; letter-spacing:.08em;}
+  .sessie-platform{font-size:15px; color:var(--ink-dim); margin-bottom:4px;}
+  .open-social-btn{
+    margin-top:26px;
+    padding:14px 26px;
+    background:var(--panel);
+    border:1px solid var(--accent);
+    color:var(--accent);
+    border-radius:999px;
+    font-family:'IBM Plex Mono';
+    font-size:14px;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .stop-btn{
+    margin-top:14px;
+    background:none; border:none;
+    color:var(--ink-faint);
+    font-family:'IBM Plex Mono';
+    font-size:13px;
+    text-decoration:underline;
+    cursor:pointer;
+  }
+  .session-note{font-size:12.5px; color:var(--ink-faint); max-width:280px; margin-top:22px; line-height:1.5;}
+
+  /* ---------- EINDE ---------- */
+  #eindeOverlay{
+    position:fixed; inset:0; z-index:51; display:none;
+    align-items:center; justify-content:center; flex-direction:column;
+    background:rgba(10,11,15,.97); text-align:center; padding:30px;
+  }
+  #eindeOverlay.active{display:flex;}
+  #eindeOverlay h2{font-size:24px; margin-bottom:10px;}
+  #eindeOverlay p{color:var(--ink-dim); font-size:14px; max-width:300px; margin:0 0 26px;}
+  .einde-actions{display:flex; gap:10px;}
+  .einde-actions button{
+    padding:12px 18px; border-radius:999px; font-family:'IBM Plex Mono'; font-size:13.5px; cursor:pointer;
+  }
+  .einde-actions .again{background:var(--accent); color:#181205; border:none;}
+  .einde-actions .close{background:none; border:1px solid var(--line); color:var(--ink-dim);}
+
+  /* ---------- GIDS ---------- */
+  .accordion{border:1px solid var(--line); border-radius:var(--radius); margin-bottom:10px; overflow:hidden; background:var(--panel);}
+  .accordion-head{
+    padding:15px 16px; display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; font-size:14.5px;
+  }
+  .accordion-head .name{display:flex; align-items:center; gap:10px;}
+  .accordion-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .accordion.open .accordion-body{max-height:600px;}
+  .accordion-body-inner{padding:0 16px 16px; font-size:13px; color:var(--ink-dim); line-height:1.6;}
+  .accordion-body-inner ul{margin:8px 0; padding-left:18px;}
+  .accordion-body-inner li{margin-bottom:6px;}
+  .fallback-hint{
+    font-size:11.5px; color:var(--ink-faint); line-height:1.55;
+    margin-top:10px;
+  }
+  .caret{color:var(--ink-faint); transition:transform .2s ease;}
+  .accordion.open .caret{transform:rotate(180deg);}
+  .gids-note{
+    background:var(--panel); border:1px dashed var(--line); border-radius:var(--radius);
+    padding:14px 16px; font-size:12.5px; color:var(--ink-faint); line-height:1.6; margin-bottom:16px;
+  }
+
+  /* ---------- GESCHIEDENIS ---------- */
+  .hist-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:13px 0; border-bottom:1px solid var(--line); font-size:13.5px;
+  }
+  .hist-item:last-child{border-bottom:none;}
+  .hist-left{color:var(--ink-dim);}
+  .hist-left .plat{color:var(--ink);}
+  .hist-right{font-size:12px; color:var(--ink-faint); text-align:right;}
+  .hist-status{font-size:11px; padding:3px 8px; border-radius:999px; margin-left:8px;}
+  .hist-status.done{background:rgba(127,174,142,.15); color:var(--ok);}
+  .hist-status.stopped{background:rgba(201,106,90,.15); color:var(--danger);}
+  .empty-state{color:var(--ink-faint); font-size:13.5px; text-align:center; padding:50px 20px; line-height:1.6;}
+  .stat-row{display:flex; gap:10px; margin-bottom:18px;}
+  .stat-box{flex:1; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px; text-align:center;}
+  .stat-box .num{font-family:'Fraunces', serif; font-size:22px; font-weight:600;}
+  .stat-box .lbl{font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em; margin-top:3px;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--bg-2); border-top:1px solid var(--line);
+    display:flex; justify-content:center;
+    padding-bottom:env(safe-area-inset-bottom);
+    z-index:40;
+  }
+  nav .navwrap{max-width:520px; width:100%; display:flex;}
+  nav button{
+    flex:1; background:none; border:none; padding:12px 6px 10px;
+    color:var(--ink-faint); font-family:'IBM Plex Mono'; font-size:11px;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    cursor:pointer;
+  }
+  nav button .ic{font-size:17px;}
+  nav button.active{color:var(--accent);}
+  footer.copy{
+    text-align:center; font-size:11px; color:var(--ink-faint);
+    padding:16px 20px 4px;
+    margin-top:22px;
+    border-top:1px solid var(--line);
+    line-height:1.8;
+  }
+  footer.copy .divider{margin:0 6px; color:var(--ink-faint);}
+  footer.copy a, footer.copy .app-name{
+    color:var(--accent);
+    text-decoration:none;
+  }
+  footer.copy .license-link{
+    color:var(--accent);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none; border:none;
+    font-family:'IBM Plex Mono'; font-size:11px;
+    padding:0;
+  }
+
+  /* ---------- LICENTIE MODAL ---------- */
+  #licenseModal{
+    position:fixed; inset:0; z-index:60; display:none;
+    align-items:flex-end; justify-content:center;
+    background:rgba(0,0,0,.6);
+  }
+  #licenseModal.active{display:flex;}
+  #licenseModal .sheet{
+    background:var(--bg-2); border:1px solid var(--line);
+    border-radius:18px 18px 0 0;
+    max-width:520px; width:100%;
+    padding:22px 22px 30px;
+    max-height:78vh; overflow-y:auto;
+  }
+  #licenseModal h3{font-size:19px; margin-bottom:14px;}
+  #licenseModal p{font-size:13px; color:var(--ink-dim); line-height:1.7; margin:0 0 12px;}
+  #licenseModal .close-license{
+    margin-top:8px; width:100%; padding:13px;
+    background:var(--panel); border:1px solid var(--line);
+    color:var(--ink); border-radius:999px;
+    font-family:'IBM Plex Mono'; font-size:13.5px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="eyebrow tts-only" data-i18n="eyebrowIntro">Je bent op de startpagina van Voordat, de app die je opent voordat je social media gebruikt. Onderaan het scherm staan drie tabbladen: Start, Gids en Geschiedenis. Hier op Start kies je eerst een platform, dan een sessieduur, en druk je daarna op Start sessie.</div>
+    <h1 id="pageTitle" data-i18n="heading">Voordat je start</h1>
+    <div class="lang-row" id="langRow">
+      <button class="lang-btn active" data-lang="nl" aria-label="Nederlands" title="Nederlands">🇳🇱</button>
+      <button class="lang-btn" data-lang="it" aria-label="Italiano" title="Italiano">🇮🇹</button>
+      <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+      <button class="lang-btn" data-lang="de" aria-label="Deutsch" title="Deutsch">🇩🇪</button>
+    </div>
+    <div class="purpose-blurb" data-i18n="purposeBlurb">Sociale media zijn ontworpen om je aandacht zo lang mogelijk vast te houden: video's starten automatisch, je tijdlijn houdt nooit op, meldingen staan standaard aan. Compagnia zet daar iets tegenover — jij bepaalt vooraf hoelang en met welk doel je gaat scrollen.</div>
+  </header>
+
+  <!-- START -->
+  <main id="tab-start" class="active">
+    <div class="tts-only" data-i18n="ttsChooseSocial">Kies nu je social.</div>
+    <div class="field-label" data-i18n="fieldPlatform">Welk platform</div>
+    <div class="platform-grid" id="platformGrid"></div>
+
+    <div class="tts-only" data-i18n="ttsChooseDuration">Kies nu de sessieduur.</div>
+    <div class="field-label" data-i18n="fieldDuration">Sessieduur</div>
+    <div class="grid-choices" id="durationGrid">
+      <div class="chip" data-min="5">5 min</div>
+      <div class="chip selected" data-min="15">15 min</div>
+      <div class="chip" data-min="30">30 min</div>
+      <div class="chip" data-min="60">60 min</div>
+      <div class="chip" data-min="0" data-i18n="durCustom">eigen</div>
+    </div>
+    <div class="custom-min" id="customMinWrap" style="display:none;">
+      <input type="number" id="customMinInput" min="1" max="240" placeholder="min">
+      <span class="hint" style="margin:0;" data-i18n="minutesWord">minuten</span>
+    </div>
+
+    <div class="tip-card" id="tipCard">
+      <div class="tip-card-label"><span data-i18n="tipCardLabelPrefix">Wist je dit al over</span> <span id="tipPlatformName">Instagram</span>?</div>
+      <div class="tip-card-text" id="tipCardText"></div>
+      <a href="#" class="tip-card-link" id="tipCardLink" data-i18n="tipCardLink">Alle tips voor dit platform →</a>
+    </div>
+
+    <div class="notif-status" id="notifStatus">
+      <span id="notifIcon">🔔</span>
+      <span id="notifStatusText" data-i18n="notifChecking">Meldingen controleren…</span>
+      <button id="notifEnableBtn" data-i18n="notifEnableBtn" style="display:none;">Inschakelen</button>
+    </div>
+
+    <button class="start-btn" id="startBtn" data-i18n="startBtn">Start sessie</button>
+    <div class="hint" id="startHint"><span data-i18n="hintPart1">Companion start nu. Daarna open je pas</span> <span id="startHintPlat">je platform</span> <span data-i18n="hintPart2">— de tijdlijn zelf blijft ongemoeid, dit is bewustzijn, geen blokkade.</span></div>
+    <div class="hint" data-i18n="notifLimitNote">Let op: dit werkt alleen als je hieronder meldingen inschakelt. Ook dan kan Android een melding vertragen of missen als je lang in een andere app zit — de melding komt van de browser, niet van YouTube zelf.</div>
+    <div class="tts-only" data-i18n="ttsPressStart">Druk nu op Start sessie om te beginnen.</div>
+  </main>
+
+  <!-- GIDS -->
+  <main id="tab-gids">
+    <div class="tts-only" data-i18n="ttsGidsIntro">Je bent op het tabblad Gids. Hier vind je per platform de instellingen die je zelf handmatig kunt aanpassen, zoals automatisch afspelen en meldingen. Tik op een platform om de tips uit te klappen.</div>
+    <div class="gids-note" data-i18n="gidsNote">Deze instellingen zitten ín de apps zelf verstopt — Compagnia kan ze niet voor je omzetten, maar wijst je wel de weg. Sommige links openen direct de juiste Android-instelling; werkt dat niet op jouw toestel, dan volg je het stappenpad.</div>
+    <div id="gidsList"></div>
+  </main>
+
+  <!-- GESCHIEDENIS -->
+  <main id="tab-hist">
+    <div class="tts-only" data-i18n="ttsHistIntro">Je bent op het tabblad Geschiedenis. Bovenaan staan drie getallen: het aantal sessies, het totaal aantal minuten, en het percentage sessies dat je volledig hebt uitgezeten. Daaronder staat de lijst met eerdere sessies.</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="num" id="statCount">0</div><div class="lbl" data-i18n="statSessions">sessies</div></div>
+      <div class="stat-box"><div class="num" id="statMin">0</div><div class="lbl" data-i18n="statMinutes">minuten totaal</div></div>
+      <div class="stat-box"><div class="num" id="statDone">0%</div><div class="lbl" data-i18n="statDonePct">volledig uitgezeten</div></div>
+    </div>
+    <div id="histList"></div>
+  </main>
+
+  <footer class="copy" id="copyrightFooter">© <span id="copyYear">2026</span> <span class="app-name">Jan den Hollander</span><span class="divider">|</span><span class="app-name">Compagnia</span><span class="divider">|</span><span data-i18n="footerTerms">Gratis · niet-commercieel · ongewijzigd</span><span class="divider">|</span><button class="license-link" id="licenseBtn" data-i18n="footerLicense">ℹ️ Licentie</button></footer>
+</div>
+
+<div id="licenseModal">
+  <div class="sheet">
+    <h3 data-i18n="licenseTitle">Licentie</h3>
+    <p data-i18n="licenseP1">Compagnia is gratis te gebruiken, voor persoonlijk en niet-commercieel gebruik.</p>
+    <p data-i18n="licenseP2">Je mag deze app gebruiken en delen zoals hij is. Het is niet toegestaan de app te wijzigen, door te verkopen, of onder eigen naam opnieuw te publiceren.</p>
+    <p>© <span class="copyYearEcho">2026</span> Jan den Hollander. <span data-i18n="licenseP3">Gebouwd als vrij beschikbaar hulpmiddel, zonder advertenties of commerciële bedoeling.</span></p>
+    <p><span data-i18n="licenseP4">Vragen of contact:</span> jandenhollander@duck.com</p>
+    <button class="close-license" id="closeLicense" data-i18n="licenseClose">Sluiten</button>
+  </div>
+</div>
+
+<!-- ACTIEVE SESSIE OVERLAY -->
+<div id="sessieOverlay">
+  <div class="tts-only" data-i18n="ttsSessionIntro">Je sessie is gestart. De cirkel toont de resterende tijd. Daaronder staat een knop om nu naar het platform te gaan, en een knop om de sessie eerder te stoppen.</div>
+  <div class="sessie-platform" id="sessiePlatform">Instagram</div>
+  <div class="timer-ring" id="timerRing">
+    <div class="timer-inner">
+      <div class="timer-big" id="timerBig">15:00</div>
+      <div class="timer-sub" data-i18n="remainingLabel">nog te gaan</div>
+    </div>
+  </div>
+  <a href="#" target="_blank" class="open-social-btn" id="openSocialBtn" data-i18n="openNowBtn">Open nu →</a>
+  <div class="session-note" data-i18n="sessionNote">De achtergrond verschuift van dag naar nacht terwijl je scrolt — een stil signaal voor tijdsbesef.</div>
+  <button class="stop-btn" id="stopBtn" data-i18n="stopBtnLabel">Sessie eerder stoppen</button>
+</div>
+
+<!-- EINDE OVERLAY -->
+<div id="eindeOverlay">
+  <h2 data-i18n="eindeTitle">Je tijd is om</h2>
+  <p id="eindeText">15 minuten zijn voorbij. Even iets anders doen, of nog een blok?</p>
+  <div class="einde-actions">
+    <button class="close" id="eindeClose" data-i18n="eindeCloseBtn">Klaar voor nu</button>
+    <button class="again" id="eindeAgain">Nog 15 min</button>
+  </div>
+</div>
+
+<nav>
+  <div class="navwrap">
+    <button class="active" data-tab="start"><span class="ic">◐</span><span data-i18n="navStart">Start</span></button>
+    <button data-tab="gids"><span class="ic">▤</span><span data-i18n="navGids">Gids</span></button>
+    <button data-tab="hist"><span class="ic">≡</span><span data-i18n="navHist">Geschiedenis</span></button>
+  </div>
+</nav>
+
+<button id="ttsBtn" aria-label="Lees deze pagina voor" title="Lees voor">🔊</button>
+
+<div id="blockScreen" role="alert">
+  <h2 data-i18n="blockTitle">Niet beschikbaar</h2>
+  <p data-i18n="blockText">Deze versie van Compagnia is aangepast en kan niet worden vertrouwd. Het origineel is gratis te vinden via de bron van © Jan den Hollander.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const PLATFORMS = [
+    {id:'instagram', name:'Instagram', color:'#d6708a', url:'https://www.instagram.com/', pkg:'com.instagram.android'},
+    {id:'tiktok', name:'TikTok', color:'#5fd0c9', url:'https://www.tiktok.com/', pkg:'com.zhiliaoapp.musically'},
+    {id:'facebook', name:'Facebook', color:'#6f8fd0', url:'https://www.facebook.com/', pkg:'com.facebook.katana'},
+    {id:'x', name:'X', color:'#c9c9c9', url:'https://x.com/', pkg:'com.twitter.android'},
+    {id:'youtube', name:'YouTube', color:'#d6605a', url:'https://www.youtube.com/', pkg:'com.google.android.youtube'},
+    {id:'anders', name:'anders', color:'#e8a34c', url:'', pkg:''}
+  ];
+
+  const GIDS_TIPS = {
+    nl: {
+      instagram:[
+        'Instellingen → Content voorkeuren → schakel "Automatisch afspelen" uit.',
+        'Instellingen → Meldingen → zet Pauzeren of per onderdeel (verhalen, likes, reels) uit.',
+        'Instellingen → Jouw activiteit → Tijdslimiet instellen — de eigen ingebouwde timer van Instagram.'
+      ],
+      tiktok:[
+        'Profiel → Instellingen → Schermtijd → Dagelijkse schermtijdlimiet instellen.',
+        'Instellingen → Meldingen → per categorie uitschakelen (push zit hier vaak nog standaard aan).',
+        'Er is geen aparte autoplay-schakelaar; de eerstvolgende video start altijd automatisch — de schermtijdlimiet is hier het enige echte alternatief.'
+      ],
+      facebook:[
+        "Instellingen → Video's en foto's → zet Video's automatisch afspelen op Nooit.",
+        'Instellingen → Meldingen — vaak diep genest per sub-categorie, reken op zoeken.',
+        'Instellingen → Jouw tijd op Facebook → Herinnering dagelijkse limiet.'
+      ],
+      x:[
+        "Instellingen → Toegankelijkheid, weergave en talen → Data-gebruik → Video's automatisch afspelen op Nooit.",
+        'Instellingen → Meldingen → Voorkeuren, per type bericht los te zetten.'
+      ],
+      youtube:[
+        'Onderaan een video: Automatisch afspelen-schakelaar direct uitzetten.',
+        'Instellingen → Algemeen → Herinneringen voor pauzeren en bedtijd aanzetten.'
+      ]
+    },
+    it: {
+      instagram:[
+        'Impostazioni → Preferenze sui contenuti → disattiva "Riproduzione automatica".',
+        'Impostazioni → Notifiche → disattiva in pausa o per categoria (storie, mi piace, reel).',
+        'Impostazioni → La tua attività → Imposta promemoria del tempo — il timer integrato di Instagram.'
+      ],
+      tiktok:[
+        'Profilo → Impostazioni → Tempo di utilizzo → imposta un limite giornaliero.',
+        'Impostazioni → Notifiche → disattiva per categoria (spesso attive di default).',
+        'Non esiste un interruttore separato per la riproduzione automatica; il video successivo parte sempre da solo — il limite di tempo resta l\'unica vera alternativa.'
+      ],
+      facebook:[
+        'Impostazioni → Video e foto → imposta Riproduzione automatica dei video su Mai.',
+        'Impostazioni → Notifiche — spesso nascoste in sottocategorie, preparati a cercare.',
+        'Impostazioni → Il tuo tempo su Facebook → Promemoria del limite giornaliero.'
+      ],
+      x:[
+        'Impostazioni → Accessibilità, visualizzazione e lingue → Utilizzo dati → Riproduzione automatica dei video su Mai.',
+        'Impostazioni → Notifiche → Preferenze, disattivabili per tipo di messaggio.'
+      ],
+      youtube:[
+        'In fondo a un video: disattiva subito l\'interruttore di riproduzione automatica.',
+        'Impostazioni → Generali → attiva i promemoria per fare una pausa e per andare a dormire.'
+      ]
+    },
+    fr: {
+      instagram:[
+        'Paramètres → Préférences de contenu → désactive "Lecture automatique".',
+        'Paramètres → Notifications → mets en pause ou désactive par catégorie (stories, mentions J\'aime, reels).',
+        'Paramètres → Ton activité → Définir un rappel de temps — le minuteur intégré d\'Instagram.'
+      ],
+      tiktok:[
+        'Profil → Paramètres → Temps d\'écran → définis une limite quotidienne.',
+        'Paramètres → Notifications → désactive par catégorie (souvent activées par défaut).',
+        'Il n\'y a pas d\'interrupteur séparé pour la lecture automatique ; la vidéo suivante démarre toujours seule — la limite de temps reste la seule vraie alternative.'
+      ],
+      facebook:[
+        'Paramètres → Vidéos et photos → mets Lecture automatique des vidéos sur Jamais.',
+        'Paramètres → Notifications — souvent imbriquées par sous-catégorie, prévois de chercher.',
+        'Paramètres → Ton temps sur Facebook → Rappel de limite quotidienne.'
+      ],
+      x:[
+        'Paramètres → Accessibilité, affichage et langues → Utilisation des données → Lecture automatique des vidéos sur Jamais.',
+        'Paramètres → Notifications → Préférences, désactivables par type de message.'
+      ],
+      youtube:[
+        'En bas d\'une vidéo : désactive directement l\'interrupteur de lecture automatique.',
+        'Paramètres → Général → active les rappels de pause et d\'heure du coucher.'
+      ]
+    },
+    de: {
+      instagram:[
+        'Einstellungen → Inhaltspräferenzen → "Automatische Wiedergabe" deaktivieren.',
+        'Einstellungen → Benachrichtigungen → pausieren oder pro Kategorie ausschalten (Stories, Likes, Reels).',
+        'Einstellungen → Deine Aktivität → Zeitlimit festlegen — der eingebaute Timer von Instagram.'
+      ],
+      tiktok:[
+        'Profil → Einstellungen → Bildschirmzeit → tägliches Zeitlimit festlegen.',
+        'Einstellungen → Benachrichtigungen → pro Kategorie deaktivieren (oft standardmäßig aktiv).',
+        'Es gibt keinen separaten Autoplay-Schalter; das nächste Video startet immer automatisch — das Zeitlimit bleibt die einzige echte Alternative.'
+      ],
+      facebook:[
+        'Einstellungen → Videos und Fotos → Automatische Videowiedergabe auf Nie stellen.',
+        'Einstellungen → Benachrichtigungen — oft tief verschachtelt pro Unterkategorie, Suchen einplanen.',
+        'Einstellungen → Deine Zeit auf Facebook → Erinnerung an Tageslimit.'
+      ],
+      x:[
+        'Einstellungen → Barrierefreiheit, Anzeige und Sprachen → Datennutzung → Automatische Videowiedergabe auf Nie stellen.',
+        'Einstellungen → Benachrichtigungen → Einstellungen, pro Nachrichtentyp einzeln abschaltbar.'
+      ],
+      youtube:[
+        'Unten in einem Video: Autoplay-Schalter direkt ausschalten.',
+        'Einstellungen → Allgemein → Erinnerungen für Pausen und Schlafenszeit aktivieren.'
+      ]
+    }
+  };
+
+  const GIDS_NAMES = {
+    nl:{instagram:'Instagram',tiktok:'TikTok',facebook:'Facebook',x:'X',youtube:'YouTube'},
+    it:{instagram:'Instagram',tiktok:'TikTok',facebook:'Facebook',x:'X',youtube:'YouTube'},
+    fr:{instagram:'Instagram',tiktok:'TikTok',facebook:'Facebook',x:'X',youtube:'YouTube'},
+    de:{instagram:'Instagram',tiktok:'TikTok',facebook:'Facebook',x:'X',youtube:'YouTube'}
+  };
+  const GIDS_ORDER = ['instagram','tiktok','facebook','x','youtube'];
+
+  const PLATFORM_ANDERS = {nl:'Anders', it:'Altro', fr:'Autre', de:'Andere'};
+
+  const TR = {
+    nl:{
+      eyebrowIntro:'Je bent op de startpagina van Compagnia, de app die je opent voordat je social media gebruikt. Onderaan het scherm staan drie tabbladen: Start, Gids en Geschiedenis. Hier op Start kies je eerst een platform, dan een sessieduur, en druk je daarna op Start sessie.',
+      heading:'Voordat je start',
+      purposeBlurb:'Sociale media zijn ontworpen om je aandacht zo lang mogelijk vast te houden: video\'s starten automatisch, je tijdlijn houdt nooit op, meldingen staan standaard aan. Compagnia zet daar iets tegenover — jij bepaalt vooraf hoelang en met welk doel je gaat scrollen.',
+      ttsChooseSocial:'Kies nu je social.',
+      fieldPlatform:'Welk platform',
+      ttsChooseDuration:'Kies nu de sessieduur.',
+      fieldDuration:'Sessieduur',
+      durCustom:'eigen',
+      minutesWord:'minuten',
+      tipCardLabelPrefix:'Wist je dit al over',
+      tipCardLink:'Alle tips voor dit platform →',
+      startBtn:'Start sessie',
+      hintPart1:'Companion start nu. Daarna open je pas',
+      hintPart2:'— de tijdlijn zelf blijft ongemoeid, dit is bewustzijn, geen blokkade.',
+      ttsPressStart:'Druk nu op Start sessie om te beginnen.',
+      notifChecking:'Meldingen controleren…',
+      notifGranted:'Meldingen staan aan',
+      notifDenied:'Meldingen geblokkeerd — zet aan via je browserinstellingen',
+      notifDefault:'Meldingen staan nog uit',
+      notifEnableBtn:'Inschakelen',
+      notifLimitNote:'Let op: dit werkt alleen als je hierboven meldingen inschakelt. Ook dan kan Android een melding vertragen of missen als je lang in een andere app zit — de melding komt van de browser, niet van YouTube zelf.',
+      startConfirmText:'Meldingen staan uit — tik nogmaals om toch te starten',
+      ttsGidsIntro:'Je bent op het tabblad Gids. Hier vind je per platform de instellingen die je zelf handmatig kunt aanpassen, zoals automatisch afspelen en meldingen. Tik op een platform om de tips uit te klappen.',
+      gidsNote:'Deze instellingen zitten ín de apps zelf verstopt — Compagnia kan ze niet voor je omzetten, maar wijst je wel de weg.',
+      fallbackHint:(name)=>`Ga naar Instellingen → Apps → ${name} → Meldingen op je toestel om de meldingen aan te passen.`,
+      ttsHistIntro:'Je bent op het tabblad Geschiedenis. Bovenaan staan drie getallen: het aantal sessies, het totaal aantal minuten, en het percentage sessies dat je volledig hebt uitgezeten. Daaronder staat de lijst met eerdere sessies.',
+      statSessions:'sessies', statMinutes:'minuten totaal', statDonePct:'volledig uitgezeten',
+      emptyState:'Nog geen sessies gelogd.<br>Start je eerste sessie via het Start-tabblad.',
+      histDone:'volledig', histStopped:'gestopt', histMin:'min',
+      footerTerms:'Gratis · niet-commercieel · ongewijzigd',
+      footerLicense:'ℹ️ Licentie',
+      licenseTitle:'Licentie',
+      licenseP1:'Compagnia is gratis te gebruiken, voor persoonlijk en niet-commercieel gebruik.',
+      licenseP2:'Je mag deze app gebruiken en delen zoals hij is. Het is niet toegestaan de app te wijzigen, door te verkopen, of onder eigen naam opnieuw te publiceren.',
+      licenseP3:'Gebouwd als vrij beschikbaar hulpmiddel, zonder advertenties of commerciële bedoeling.',
+      licenseP4:'Vragen of contact:',
+      licenseClose:'Sluiten',
+      ttsSessionIntro:'Je sessie is gestart. De cirkel toont de resterende tijd. Daaronder staat een knop om nu naar het platform te gaan, en een knop om de sessie eerder te stoppen.',
+      remainingLabel:'nog te gaan',
+      openNowBtn:'Open nu →',
+      sessionNote:'De achtergrond verschuift van dag naar nacht terwijl je scrolt — een stil signaal voor tijdsbesef.',
+      stopBtnLabel:'Sessie eerder stoppen',
+      eindeTitle:'Je tijd is om',
+      eindeText:(min)=>`${min} minuten zijn voorbij. Even iets anders doen, of nog een blok?`,
+      eindeCloseBtn:'Klaar voor nu',
+      eindeAgainBtn:(min)=>`Nog ${min} min`,
+      navStart:'Start', navGids:'Gids', navHist:'Geschiedenis',
+      blockTitle:'Niet beschikbaar',
+      blockText:'Deze versie van Compagnia is aangepast en kan niet worden vertrouwd. Het origineel is gratis te vinden via de bron van © Jan den Hollander.',
+      notifyTitle:'Je tijd is om',
+      notifyBody:(plat,min)=>`${plat} — ${min} minuten voorbij.`,
+      speechLang:'nl-NL'
+    },
+    it:{
+      eyebrowIntro:'Sei nella pagina iniziale di Compagnia, l\'app che apri prima di usare i social. In basso trovi tre schede: Inizio, Guida e Cronologia. Qui su Inizio scegli prima una piattaforma, poi una durata, e infine premi Avvia sessione.',
+      heading:'Prima di iniziare',
+      purposeBlurb:'I social sono progettati per catturare la tua attenzione il più a lungo possibile: i video partono da soli, la timeline non si ferma mai, le notifiche sono attive di default. Compagnia offre un contrappeso — decidi tu, in anticipo, per quanto tempo e con quale scopo scorrere.',
+      ttsChooseSocial:'Scegli ora il tuo social.',
+      fieldPlatform:'Quale piattaforma',
+      ttsChooseDuration:'Scegli ora la durata della sessione.',
+      fieldDuration:'Durata sessione',
+      durCustom:'personalizzata',
+      minutesWord:'minuti',
+      tipCardLabelPrefix:'Lo sapevi già su',
+      tipCardLink:'Tutti i suggerimenti per questa piattaforma →',
+      startBtn:'Avvia sessione',
+      hintPart1:'Compagnia parte ora. Solo dopo apri',
+      hintPart2:'— la tua timeline resta invariata, questo è consapevolezza, non un blocco.',
+      ttsPressStart:'Premi ora Avvia sessione per iniziare.',
+      notifChecking:'Verifica notifiche…',
+      notifGranted:'Notifiche attive',
+      notifDenied:'Notifiche bloccate — attivale nelle impostazioni del browser',
+      notifDefault:'Notifiche ancora disattivate',
+      notifEnableBtn:'Attiva',
+      notifLimitNote:'Attenzione: funziona solo se attivi le notifiche qui sopra. Anche così, Android può ritardare o perdere una notifica se resti a lungo in un\'altra app — la notifica arriva dal browser, non da YouTube stesso.',
+      startConfirmText:'Notifiche disattivate — tocca di nuovo per avviare comunque',
+      ttsGidsIntro:'Sei nella scheda Guida. Qui trovi, per ogni piattaforma, le impostazioni che puoi modificare manualmente, come la riproduzione automatica e le notifiche. Tocca una piattaforma per aprire i suggerimenti.',
+      gidsNote:'Queste impostazioni sono nascoste dentro le app stesse — Compagnia non può cambiarle al posto tuo, ma ti indica la strada.',
+      fallbackHint:(name)=>`Vai su Impostazioni → App → ${name} → Notifiche sul tuo dispositivo per modificarle.`,
+      ttsHistIntro:'Sei nella scheda Cronologia. In alto trovi tre numeri: il numero di sessioni, i minuti totali, e la percentuale di sessioni portate a termine. Sotto trovi l\'elenco delle sessioni precedenti.',
+      statSessions:'sessioni', statMinutes:'minuti totali', statDonePct:'portate a termine',
+      emptyState:'Nessuna sessione registrata finora.<br>Avvia la tua prima sessione dalla scheda Inizio.',
+      histDone:'completa', histStopped:'interrotta', histMin:'min',
+      footerTerms:'Gratuita · non commerciale · invariata',
+      footerLicense:'ℹ️ Licenza',
+      licenseTitle:'Licenza',
+      licenseP1:'Compagnia è gratuita, per uso personale e non commerciale.',
+      licenseP2:'Puoi usare e condividere questa app così com\'è. Non è consentito modificarla, rivenderla o ripubblicarla a tuo nome.',
+      licenseP3:'Costruita come strumento liberamente disponibile, senza pubblicità né scopo commerciale.',
+      licenseP4:'Domande o contatti:',
+      licenseClose:'Chiudi',
+      ttsSessionIntro:'La sessione è iniziata. Il cerchio mostra il tempo rimanente. Sotto trovi un pulsante per aprire ora la piattaforma, e uno per interrompere prima la sessione.',
+      remainingLabel:'rimanenti',
+      openNowBtn:'Apri ora →',
+      sessionNote:'Lo sfondo passa dal giorno alla notte man mano che scorri — un segnale silenzioso per la percezione del tempo.',
+      stopBtnLabel:'Interrompi sessione',
+      eindeTitle:'Il tempo è scaduto',
+      eindeText:(min)=>`${min} minuti sono passati. Vuoi fare altro, o un altro blocco?`,
+      eindeCloseBtn:'Ho finito per ora',
+      eindeAgainBtn:(min)=>`Altri ${min} min`,
+      navStart:'Inizio', navGids:'Guida', navHist:'Cronologia',
+      blockTitle:'Non disponibile',
+      blockText:'Questa versione di Compagnia è stata modificata e non è affidabile. L\'originale è disponibile gratuitamente tramite la fonte di © Jan den Hollander.',
+      notifyTitle:'Il tempo è scaduto',
+      notifyBody:(plat,min)=>`${plat} — ${min} minuti passati.`,
+      speechLang:'it-IT'
+    },
+    fr:{
+      eyebrowIntro:'Tu es sur la page d\'accueil de Compagnia, l\'appli que tu ouvres avant d\'utiliser les réseaux sociaux. En bas de l\'écran, trois onglets : Démarrer, Guide et Historique. Ici, sur Démarrer, choisis d\'abord une plateforme, puis une durée, et appuie ensuite sur Démarrer la session.',
+      heading:'Avant de commencer',
+      purposeBlurb:'Les réseaux sociaux sont conçus pour capter ton attention le plus longtemps possible : les vidéos démarrent seules, le fil ne s\'arrête jamais, les notifications sont activées par défaut. Compagnia fait contrepoids — c\'est toi qui décides à l\'avance combien de temps et dans quel but tu vas faire défiler.',
+      ttsChooseSocial:'Choisis maintenant ton réseau social.',
+      fieldPlatform:'Quelle plateforme',
+      ttsChooseDuration:'Choisis maintenant la durée de la session.',
+      fieldDuration:'Durée de la session',
+      durCustom:'personnalisée',
+      minutesWord:'minutes',
+      tipCardLabelPrefix:'Le savais-tu déjà sur',
+      tipCardLink:'Tous les conseils pour cette plateforme →',
+      startBtn:'Démarrer la session',
+      hintPart1:'Compagnia démarre maintenant. Tu n\'ouvres',
+      hintPart2:'qu\'ensuite — ta timeline reste inchangée, c\'est de la conscience, pas un blocage.',
+      ttsPressStart:'Appuie maintenant sur Démarrer la session pour commencer.',
+      notifChecking:'Vérification des notifications…',
+      notifGranted:'Notifications activées',
+      notifDenied:'Notifications bloquées — active-les dans les réglages du navigateur',
+      notifDefault:'Notifications encore désactivées',
+      notifEnableBtn:'Activer',
+      notifLimitNote:'Attention : cela ne fonctionne que si tu actives les notifications ci-dessus. Même ainsi, Android peut retarder ou manquer une notification si tu restes longtemps dans une autre appli — la notification vient du navigateur, pas de YouTube lui-même.',
+      startConfirmText:'Notifications désactivées — appuie encore pour démarrer quand même',
+      ttsGidsIntro:'Tu es sur l\'onglet Guide. Tu y trouves, par plateforme, les réglages que tu peux ajuster toi-même, comme la lecture automatique et les notifications. Touche une plateforme pour déplier les conseils.',
+      gidsNote:'Ces réglages sont cachés dans les applications elles-mêmes — Compagnia ne peut pas les modifier à ta place, mais t\'indique le chemin.',
+      fallbackHint:(name)=>`Va dans Paramètres → Applications → ${name} → Notifications sur ton appareil pour les modifier.`,
+      ttsHistIntro:'Tu es sur l\'onglet Historique. En haut, trois chiffres : le nombre de sessions, le total de minutes, et le pourcentage de sessions menées à terme. En dessous, la liste des sessions précédentes.',
+      statSessions:'sessions', statMinutes:'minutes au total', statDonePct:'menées à terme',
+      emptyState:'Aucune session enregistrée pour l\'instant.<br>Démarre ta première session depuis l\'onglet Démarrer.',
+      histDone:'terminée', histStopped:'interrompue', histMin:'min',
+      footerTerms:'Gratuite · non commerciale · inchangée',
+      footerLicense:'ℹ️ Licence',
+      licenseTitle:'Licence',
+      licenseP1:'Compagnia est gratuite, pour un usage personnel et non commercial.',
+      licenseP2:'Tu peux utiliser et partager cette appli telle quelle. Il n\'est pas permis de la modifier, de la revendre, ou de la republier sous un autre nom.',
+      licenseP3:'Conçue comme un outil librement disponible, sans publicité ni visée commerciale.',
+      licenseP4:'Questions ou contact :',
+      licenseClose:'Fermer',
+      ttsSessionIntro:'Ta session a commencé. Le cercle indique le temps restant. En dessous, un bouton pour ouvrir la plateforme maintenant, et un pour arrêter la session plus tôt.',
+      remainingLabel:'restantes',
+      openNowBtn:'Ouvrir maintenant →',
+      sessionNote:'L\'arrière-plan passe du jour à la nuit au fil de ton défilement — un signal discret pour garder la notion du temps.',
+      stopBtnLabel:'Arrêter la session',
+      eindeTitle:'Ton temps est écoulé',
+      eindeText:(min)=>`${min} minutes se sont écoulées. Tu fais autre chose, ou encore un bloc ?`,
+      eindeCloseBtn:'Terminé pour l\'instant',
+      eindeAgainBtn:(min)=>`Encore ${min} min`,
+      navStart:'Démarrer', navGids:'Guide', navHist:'Historique',
+      blockTitle:'Indisponible',
+      blockText:'Cette version de Compagnia a été modifiée et n\'est pas fiable. L\'original est disponible gratuitement via la source de © Jan den Hollander.',
+      notifyTitle:'Ton temps est écoulé',
+      notifyBody:(plat,min)=>`${plat} — ${min} minutes écoulées.`,
+      speechLang:'fr-FR'
+    },
+    de:{
+      eyebrowIntro:'Du bist auf der Startseite von Compagnia, der App, die du öffnest, bevor du soziale Medien nutzt. Unten am Bildschirm gibt es drei Tabs: Start, Anleitung und Verlauf. Hier auf Start wählst du zuerst eine Plattform, dann eine Sitzungsdauer, und drückst danach auf Sitzung starten.',
+      heading:'Bevor du startest',
+      purposeBlurb:'Soziale Medien sind darauf ausgelegt, deine Aufmerksamkeit so lange wie möglich zu binden: Videos starten von selbst, die Timeline endet nie, Benachrichtigungen sind standardmäßig an. Compagnia setzt dem etwas entgegen — du entscheidest vorher, wie lange und mit welchem Ziel du scrollst.',
+      ttsChooseSocial:'Wähle jetzt dein soziales Netzwerk.',
+      fieldPlatform:'Welche Plattform',
+      ttsChooseDuration:'Wähle jetzt die Sitzungsdauer.',
+      fieldDuration:'Sitzungsdauer',
+      durCustom:'eigene',
+      minutesWord:'Minuten',
+      tipCardLabelPrefix:'Wusstest du das schon über',
+      tipCardLink:'Alle Tipps für diese Plattform →',
+      startBtn:'Sitzung starten',
+      hintPart1:'Compagnia startet jetzt. Erst danach öffnest du',
+      hintPart2:'— die Timeline selbst bleibt unangetastet, das ist Bewusstsein, keine Blockade.',
+      ttsPressStart:'Drücke jetzt auf Sitzung starten, um zu beginnen.',
+      notifChecking:'Benachrichtigungen werden geprüft…',
+      notifGranted:'Benachrichtigungen sind an',
+      notifDenied:'Benachrichtigungen blockiert — aktiviere sie in den Browsereinstellungen',
+      notifDefault:'Benachrichtigungen sind noch aus',
+      notifEnableBtn:'Aktivieren',
+      notifLimitNote:'Achtung: Das funktioniert nur, wenn du oben Benachrichtigungen aktivierst. Auch dann kann Android eine Benachrichtigung verzögern oder verpassen, wenn du lange in einer anderen App bist — die Benachrichtigung kommt vom Browser, nicht von YouTube selbst.',
+      startConfirmText:'Benachrichtigungen sind aus — nochmal tippen, um trotzdem zu starten',
+      ttsGidsIntro:'Du bist im Tab Anleitung. Hier findest du pro Plattform die Einstellungen, die du selbst manuell anpassen kannst, wie Autoplay und Benachrichtigungen. Tippe auf eine Plattform, um die Tipps aufzuklappen.',
+      gidsNote:'Diese Einstellungen sind in den Apps selbst versteckt — Compagnia kann sie nicht für dich ändern, zeigt dir aber den Weg.',
+      fallbackHint:(name)=>`Gehe auf deinem Gerät zu Einstellungen → Apps → ${name} → Benachrichtigungen, um sie anzupassen.`,
+      ttsHistIntro:'Du bist im Tab Verlauf. Oben stehen drei Zahlen: die Anzahl der Sitzungen, die Gesamtminuten, und der Prozentsatz vollständig durchgehaltener Sitzungen. Darunter die Liste früherer Sitzungen.',
+      statSessions:'Sitzungen', statMinutes:'Minuten gesamt', statDonePct:'vollständig durchgehalten',
+      emptyState:'Noch keine Sitzungen erfasst.<br>Starte deine erste Sitzung über den Start-Tab.',
+      histDone:'vollständig', histStopped:'abgebrochen', histMin:'min',
+      footerTerms:'Kostenlos · nicht-kommerziell · unverändert',
+      footerLicense:'ℹ️ Lizenz',
+      licenseTitle:'Lizenz',
+      licenseP1:'Compagnia ist kostenlos, für den persönlichen und nicht-kommerziellen Gebrauch.',
+      licenseP2:'Du darfst diese App so nutzen und weitergeben, wie sie ist. Es ist nicht erlaubt, sie zu verändern, weiterzuverkaufen oder unter eigenem Namen erneut zu veröffentlichen.',
+      licenseP3:'Gebaut als frei verfügbares Hilfsmittel, ohne Werbung oder kommerzielle Absicht.',
+      licenseP4:'Fragen oder Kontakt:',
+      licenseClose:'Schließen',
+      ttsSessionIntro:'Deine Sitzung hat begonnen. Der Kreis zeigt die verbleibende Zeit. Darunter ein Knopf, um jetzt zur Plattform zu gehen, und einer, um die Sitzung vorzeitig zu beenden.',
+      remainingLabel:'verbleibend',
+      openNowBtn:'Jetzt öffnen →',
+      sessionNote:'Der Hintergrund wechselt von Tag zu Nacht, während du scrollst — ein stilles Signal für dein Zeitgefühl.',
+      stopBtnLabel:'Sitzung vorzeitig beenden',
+      eindeTitle:'Deine Zeit ist um',
+      eindeText:(min)=>`${min} Minuten sind vorbei. Etwas anderes tun, oder noch einen Block?`,
+      eindeCloseBtn:'Fertig für jetzt',
+      eindeAgainBtn:(min)=>`Noch ${min} min`,
+      navStart:'Start', navGids:'Anleitung', navHist:'Verlauf',
+      blockTitle:'Nicht verfügbar',
+      blockText:'Diese Version von Compagnia wurde verändert und ist nicht vertrauenswürdig. Das Original findest du kostenlos über die Quelle von © Jan den Hollander.',
+      notifyTitle:'Deine Zeit ist um',
+      notifyBody:(plat,min)=>`${plat} — ${min} Minuten vorbei.`,
+      speechLang:'de-DE'
+    }
+  };
+
+  let currentLang = localStorage.getItem('compagnia_lang') || 'nl';
+
+  let selectedPlatform = PLATFORMS[0];
+  let selectedMinutes = 15;
+  let timerInterval = null;
+  let sessionEnd = null;
+  let sessionStartTs = null;
+  let stoppedEarly = false;
+  let alarmLoopId = null;
+  let alarmSafetyTimeout = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- NAV ----------
+  document.querySelectorAll('nav button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('main').forEach(m=>m.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-'+btn.dataset.tab).classList.add('active');
+      if(btn.dataset.tab==='hist') renderHistory();
+    });
+  });
+
+  // ---------- START: platform grid ----------
+  const platformGrid = $('platformGrid');
+  function platformLabel(p){
+    return p.id==='anders' ? PLATFORM_ANDERS[currentLang] : p.name;
+  }
+  function renderPlatformGrid(){
+    platformGrid.innerHTML = '';
+    PLATFORMS.forEach((p)=>{
+      const el = document.createElement('div');
+      el.className = 'platform-card' + (p.id===selectedPlatform.id?' selected':'');
+      el.dataset.id = p.id;
+      el.innerHTML = `<span class="dot" style="background:${p.color}"></span><span>${platformLabel(p)}</span>`;
+      el.addEventListener('click', ()=>{
+        document.querySelectorAll('.platform-card').forEach(c=>c.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedPlatform = p;
+        $('startHintPlat').textContent = platformLabel(p);
+        updateTipCard();
+      });
+      platformGrid.appendChild(el);
+    });
+  }
+  renderPlatformGrid();
+  $('startHintPlat').textContent = platformLabel(selectedPlatform);
+
+  function updateTipCard(){
+    const tips = GIDS_TIPS[currentLang][selectedPlatform.id];
+    const card = $('tipCard');
+    if(!tips){
+      card.classList.add('empty');
+      return;
+    }
+    card.classList.remove('empty');
+    $('tipPlatformName').textContent = GIDS_NAMES[currentLang][selectedPlatform.id];
+    $('tipCardText').textContent = tips[0];
+    $('tipCardLink').dataset.target = selectedPlatform.id;
+  }
+
+  $('tipCardLink').addEventListener('click', (e)=>{
+    e.preventDefault();
+    const targetId = e.currentTarget.dataset.target;
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('main').forEach(m=>m.classList.remove('active'));
+    document.querySelector('nav button[data-tab="gids"]').classList.add('active');
+    $('tab-gids').classList.add('active');
+    const acc = document.getElementById('acc-'+targetId);
+    if(acc){
+      document.querySelectorAll('.accordion.open').forEach(a=>{ if(a!==acc) a.classList.remove('open'); });
+      acc.classList.add('open');
+      setTimeout(()=>acc.scrollIntoView({behavior:'smooth', block:'center'}), 60);
+    }
+  });
+
+  // ---------- START: duration chips ----------
+  document.querySelectorAll('#durationGrid .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('#durationGrid .chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      const min = parseInt(chip.dataset.min,10);
+      if(min===0){
+        $('customMinWrap').style.display='flex';
+        selectedMinutes = parseInt($('customMinInput').value,10) || 10;
+      } else {
+        $('customMinWrap').style.display='none';
+        selectedMinutes = min;
+      }
+    });
+  });
+  $('customMinInput').addEventListener('input', (e)=>{
+    selectedMinutes = parseInt(e.target.value,10) || 1;
+  });
+
+  // ---------- START SESSIE ----------
+  let startConfirmPending = false;
+  $('startBtn').addEventListener('click', ()=>{
+    const permOk = ('Notification' in window) && Notification.permission === 'granted';
+    if(!permOk && !startConfirmPending){
+      startConfirmPending = true;
+      $('startBtn').classList.add('confirm-pending');
+      $('startBtn').textContent = TR[currentLang].startConfirmText;
+      $('notifStatus').scrollIntoView({behavior:'smooth', block:'center'});
+      setTimeout(()=>{
+        startConfirmPending = false;
+        $('startBtn').classList.remove('confirm-pending');
+        $('startBtn').textContent = TR[currentLang].startBtn;
+      }, 4000);
+      return;
+    }
+    startConfirmPending = false;
+    $('startBtn').classList.remove('confirm-pending');
+    $('startBtn').textContent = TR[currentLang].startBtn;
+    startSession();
+  });
+
+  function startSession(){
+    sessionStartTs = Date.now();
+    sessionEnd = sessionStartTs + selectedMinutes*60000;
+    stoppedEarly = false;
+
+    $('sessiePlatform').textContent = platformLabel(selectedPlatform);
+    const link = $('openSocialBtn');
+    if(selectedPlatform.url){
+      link.href = selectedPlatform.url;
+      link.style.display = 'inline-block';
+    } else {
+      link.style.display = 'none';
+    }
+
+    $('sessieOverlay').classList.add('active');
+    tickTimer();
+    timerInterval = setInterval(tickTimer, 1000);
+  }
+
+  function tickTimer(){
+    const now = Date.now();
+    const remaining = Math.max(0, sessionEnd - now);
+    const totalMs = selectedMinutes*60000;
+    const elapsedFrac = 1 - (remaining/totalMs);
+
+    const mm = Math.floor(remaining/60000);
+    const ss = Math.floor((remaining%60000)/1000);
+    $('timerBig').textContent = String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+    $('timerRing').style.setProperty('--pct', Math.round(elapsedFrac*100));
+
+    applyDagNacht(elapsedFrac);
+
+    if(remaining<=0){
+      clearInterval(timerInterval);
+      finishSession(true);
+    }
+  }
+
+  function applyDagNacht(frac){
+    // dag (warm, licht) -> nacht (donkerblauw) naarmate sessie vordert
+    const dayR=30, dayG=32, dayB=42;     // start (var(--bg) tint, warm ondertoon via accent gradient)
+    const nightR=10, nightG=13, nightB=28; // eind
+    const r = Math.round(dayR + (nightR-dayR)*frac);
+    const g = Math.round(dayG + (nightG-dayG)*frac);
+    const b = Math.round(dayB + (nightB-dayB)*frac);
+    const warmth = 1-frac;
+    document.getElementById('sessieOverlay').style.background =
+      `radial-gradient(circle at 50% 30%, rgba(232,163,76,${0.10*warmth}), rgba(${r},${g},${b},1) 70%)`;
+  }
+
+  $('stopBtn').addEventListener('click', ()=>{
+    clearInterval(timerInterval);
+    stoppedEarly = true;
+    finishSession(false);
+  });
+
+  function finishSession(completed){
+    $('sessieOverlay').classList.remove('active');
+    logSession(completed);
+
+    if(completed){
+      notifyEnd();
+      $('eindeText').textContent = TR[currentLang].eindeText(selectedMinutes);
+      $('eindeAgain').textContent = TR[currentLang].eindeAgainBtn(selectedMinutes);
+      $('eindeOverlay').classList.add('active');
+    }
+  }
+
+  function notifyEnd(){
+    try{
+      if(Notification && Notification.permission==='granted'){
+        const t = TR[currentLang];
+        new Notification(t.notifyTitle, {body: t.notifyBody(platformLabel(selectedPlatform), selectedMinutes)});
+      }
+    }catch(e){}
+    if(navigator.vibrate) navigator.vibrate([120,60,120]);
+    startAlarmLoop(); // hoorbaar zolang deze tab actief/voorgrond is; browsers dempen audio in achtergrondtabs
+  }
+
+  function playAlarmBeepCycle(){
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const beeps = [0, 0.35, 0.7, 1.05, 1.4, 1.75];
+      beeps.forEach(t=>{
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+        gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + t + 0.02);
+        gain.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + t + 0.22);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + t);
+        osc.stop(ctx.currentTime + t + 0.25);
+      });
+      if(navigator.vibrate) navigator.vibrate([80,40,80]);
+    }catch(e){}
+  }
+
+  function startAlarmLoop(){
+    stopAlarmLoop();
+    playAlarmBeepCycle();
+    alarmLoopId = setInterval(playAlarmBeepCycle, 2400);
+    // veiligheidsklep: stopt vanzelf na 2 minuten als niemand reageert
+    alarmSafetyTimeout = setTimeout(stopAlarmLoop, 120000);
+  }
+
+  function stopAlarmLoop(){
+    if(alarmLoopId){ clearInterval(alarmLoopId); alarmLoopId = null; }
+    if(alarmSafetyTimeout){ clearTimeout(alarmSafetyTimeout); alarmSafetyTimeout = null; }
+  }
+
+  $('eindeClose').addEventListener('click', ()=>{
+    stopAlarmLoop();
+    $('eindeOverlay').classList.remove('active');
+  });
+  $('eindeAgain').addEventListener('click', ()=>{
+    stopAlarmLoop();
+    $('eindeOverlay').classList.remove('active');
+    startSession();
+  });
+
+  // ---------- HISTORIE ----------
+  function logSession(completed){
+    const list = JSON.parse(localStorage.getItem('voordat_sessions')||'[]');
+    list.unshift({
+      platform:selectedPlatform.name,
+      minutes:selectedMinutes,
+      completed:completed,
+      ts:sessionStartTs
+    });
+    localStorage.setItem('voordat_sessions', JSON.stringify(list.slice(0,200)));
+  }
+
+  function renderHistory(){
+    const list = JSON.parse(localStorage.getItem('voordat_sessions')||'[]');
+    const histList = $('histList');
+    const t = TR[currentLang];
+    if(list.length===0){
+      histList.innerHTML = `<div class="empty-state">${t.emptyState}</div>`;
+      $('statCount').textContent='0'; $('statMin').textContent='0'; $('statDone').textContent='0%';
+      return;
+    }
+    const totalMin = list.reduce((s,x)=>s+x.minutes,0);
+    const doneCount = list.filter(x=>x.completed).length;
+    $('statCount').textContent = list.length;
+    $('statMin').textContent = totalMin;
+    $('statDone').textContent = Math.round(100*doneCount/list.length)+'%';
+
+    const localeMap = {nl:'nl-NL', it:'it-IT', fr:'fr-FR', de:'de-DE'};
+    const locale = localeMap[currentLang];
+    histList.innerHTML = list.map(item=>{
+      const d = new Date(item.ts);
+      const dateStr = d.toLocaleDateString(locale,{day:'numeric',month:'short'}) + ' · ' + d.toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'});
+      return `<div class="hist-item">
+        <div class="hist-left"><span class="plat">${item.platform}</span> — ${item.minutes} ${t.histMin}</div>
+        <div class="hist-right">${dateStr}<span class="hist-status ${item.completed?'done':'stopped'}">${item.completed?t.histDone:t.histStopped}</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  // ---------- GIDS ----------
+  const gidsList = $('gidsList');
+  function renderGidsList(){
+    const openIds = Array.from(document.querySelectorAll('.accordion.open')).map(a=>a.id);
+    gidsList.innerHTML = '';
+    GIDS_ORDER.forEach(id=>{
+      const plat = PLATFORMS.find(p=>p.id===id);
+      const name = GIDS_NAMES[currentLang][id];
+      const tips = GIDS_TIPS[currentLang][id];
+      const acc = document.createElement('div');
+      acc.className = 'accordion' + (openIds.includes('acc-'+id) ? ' open' : '');
+      acc.id = 'acc-'+id;
+      acc.innerHTML = `
+        <div class="accordion-head">
+          <div class="name"><span class="dot" style="background:${plat.color}"></span>${name}</div>
+          <span class="caret">▾</span>
+        </div>
+        <div class="accordion-body"><div class="accordion-body-inner">
+          <ul>${tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+          <div class="fallback-hint">${TR[currentLang].fallbackHint(name)}</div>
+        </div></div>`;
+      acc.querySelector('.accordion-head').addEventListener('click', ()=>{
+        acc.classList.toggle('open');
+      });
+      gidsList.appendChild(acc);
+    });
+  }
+  renderGidsList();
+
+  updateTipCard();
+
+  // ---------- TTS: voorlezen actieve tab ----------
+  const ttsBtn = $('ttsBtn');
+  let speaking = false;
+  let ttsSessionId = 0;
+
+  function collectActiveText(){
+    const active = document.querySelector('main.active') ||
+                   (document.getElementById('sessieOverlay').classList.contains('active') ? document.getElementById('sessieOverlay') : null);
+    if(!active) return '';
+    return active.innerText.replace(/\s+/g,' ').trim();
+  }
+
+  function speak(){
+    if(!('speechSynthesis' in window)){
+      alert('Voorlezen wordt niet ondersteund door deze browser.');
+      return;
+    }
+    const text = collectActiveText();
+    if(!text) return;
+    window.speechSynthesis.cancel();
+
+    const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+    let i = 0;
+    speaking = true;
+    ttsBtn.classList.add('speaking');
+    ttsBtn.textContent='■';
+    const mySession = ++ttsSessionId;
+
+    function speakNext(){
+      if(mySession !== ttsSessionId) return; // gestopt of nieuwe sessie gestart
+      if(i >= sentences.length){
+        speaking = false;
+        ttsBtn.classList.remove('speaking');
+        ttsBtn.textContent='🔊';
+        return;
+      }
+      const utter = new SpeechSynthesisUtterance(sentences[i].trim());
+      utter.lang = TR[currentLang].speechLang;
+      utter.rate = 0.82;
+      utter.pitch = 1;
+      i++;
+      utter.onend = ()=>{
+        if(mySession !== ttsSessionId) return;
+        setTimeout(speakNext, 320); // korte adempauze tussen zinnen
+      };
+      utter.onerror = utter.onend;
+      window.speechSynthesis.speak(utter);
+    }
+    speakNext();
+  }
+
+  function stopSpeak(){
+    ttsSessionId++; // annuleert eventuele wachtende vervolgzin
+    window.speechSynthesis.cancel();
+    speaking = false;
+    ttsBtn.classList.remove('speaking');
+    ttsBtn.textContent='🔊';
+  }
+
+  ttsBtn.addEventListener('click', ()=>{
+    if(speaking){ stopSpeak(); } else { speak(); }
+  });
+
+  // stop voorlezen zodra van tab gewisseld wordt, zodat oude tekst niet doorloopt
+  document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click', stopSpeak));
+  $('tipCardLink').addEventListener('click', stopSpeak);
+
+  // ---------- INTEGRITEIT / COPYRIGHT-CHECK ----------
+  const REQUIRED_MARK = 'Jan den Hollander';
+  function blockApp(){
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    document.getElementById('blockScreen').classList.add('active');
+    document.querySelectorAll('.app, nav, #ttsBtn, #sessieOverlay, #eindeOverlay, #licenseModal').forEach(el=>{
+      el.style.display = 'none';
+    });
+  }
+  function checkIntegrity(){
+    const footer = document.getElementById('copyrightFooter');
+    if(!footer || !footer.textContent.includes(REQUIRED_MARK)){
+      blockApp();
+    }
+  }
+  const integrityObserver = new MutationObserver(()=>{ checkIntegrity(); });
+  window.addEventListener('DOMContentLoaded', ()=>{
+    integrityObserver.observe(document.body, {childList:true, subtree:true, characterData:true});
+    checkIntegrity();
+  });
+
+  // ---------- LICENTIE MODAL ----------
+  const thisYear = new Date().getFullYear();
+  document.querySelectorAll('#copyYear, .copyYearEcho').forEach(el=> el.textContent = thisYear);
+  $('licenseBtn').addEventListener('click', ()=>{
+    stopSpeak();
+    $('licenseModal').classList.add('active');
+  });
+  $('closeLicense').addEventListener('click', ()=>{
+    $('licenseModal').classList.remove('active');
+  });
+
+  // ---------- TAALWISSEL ----------
+  function applyLanguage(lang){
+    currentLang = lang;
+    localStorage.setItem('compagnia_lang', lang);
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.dataset.i18n;
+      const val = TR[lang][key];
+      if(typeof val === 'string') el.textContent = val;
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(b=>{
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+
+    renderPlatformGrid();
+    $('startHintPlat').textContent = platformLabel(selectedPlatform);
+    updateTipCard();
+    renderGidsList();
+    renderHistory();
+    updateNotifStatusUI();
+  }
+
+  // ---------- MELDINGSTOESTEMMING ----------
+  function updateNotifStatusUI(){
+    const box = $('notifStatus');
+    const icon = $('notifIcon');
+    const text = $('notifStatusText');
+    const btn = $('notifEnableBtn');
+    const t = TR[currentLang];
+    if(!('Notification' in window)){
+      box.className = 'notif-status needs-action';
+      icon.textContent = '🔕';
+      text.textContent = t.notifDenied;
+      btn.style.display = 'none';
+      return;
+    }
+    const perm = Notification.permission;
+    box.className = 'notif-status ' + (perm==='granted' ? 'granted' : 'needs-action');
+    if(perm==='granted'){
+      icon.textContent = '🔔';
+      text.textContent = t.notifGranted;
+      btn.style.display = 'none';
+    } else if(perm==='denied'){
+      icon.textContent = '🔕';
+      text.textContent = t.notifDenied;
+      btn.style.display = 'none';
+    } else {
+      icon.textContent = '🔔';
+      text.textContent = t.notifDefault;
+      btn.style.display = 'inline-block';
+      btn.textContent = t.notifEnableBtn;
+    }
+  }
+
+  $('notifEnableBtn').addEventListener('click', ()=>{
+    if('Notification' in window){
+      Notification.requestPermission().then(()=> updateNotifStatusUI());
+    }
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      stopSpeak();
+      applyLanguage(btn.dataset.lang);
+    });
+  });
+
+  applyLanguage(currentLang);
+
+})();
+</script>
+
+</body>
+</html>
