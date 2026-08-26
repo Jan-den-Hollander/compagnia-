@@ -143,6 +143,43 @@
   }
   .start-btn:disabled{background:var(--line); color:var(--ink-faint);}
   .hint{font-size:12.5px; color:var(--ink-faint); line-height:1.5; margin-top:8px;}
+
+  /* ---------- REGELS ---------- */
+  .regels-disclaimer{
+    background:var(--panel); border:1px dashed var(--line); border-radius:var(--radius);
+    padding:14px 16px; font-size:12.5px; color:var(--ink-faint); line-height:1.6; margin-bottom:20px;
+  }
+  .regels-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px;
+  }
+  .switch-row{
+    display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-dim);
+    flex:1; min-width:200px;
+  }
+  .switch-row input[type="checkbox"]{width:18px; height:18px; accent-color:var(--accent); flex-shrink:0;}
+  .regels-row input[type="time"], .regels-row input[type="number"], .regels-row input[type="date"]{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    color:var(--ink); font-family:'IBM Plex Mono'; padding:9px 10px; font-size:14px;
+  }
+  .regels-row input[type="number"]{width:80px;}
+  .mini-label{display:block; font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px;}
+  .lock-notice{
+    display:flex; align-items:center; gap:10px; font-size:14px; color:var(--ink-dim);
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:14px;
+  }
+  .pin-entry-row{display:flex; gap:10px;}
+  .pin-entry-row input, #pinNewInput{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    color:var(--ink); font-family:'IBM Plex Mono'; padding:11px 14px; font-size:16px;
+    letter-spacing:.2em; width:110px;
+  }
+  .pin-entry-row button, #pinSetBtn, #pinRemoveBtn{
+    background:var(--accent); color:#181205; border:none; border-radius:999px;
+    padding:11px 18px; font-family:'IBM Plex Mono'; font-size:13px; cursor:pointer;
+  }
+  #pinRemoveBtn{background:var(--panel); color:var(--danger); border:1px solid var(--danger);}
+  .pin-error{color:var(--danger); font-size:12.5px; margin-top:8px;}
   .tip-card{
     margin-top:22px;
     background:var(--panel);
@@ -398,6 +435,7 @@
 
   <!-- START -->
   <main id="tab-start" class="active">
+    <div class="regels-disclaimer" id="ageNoteBanner" style="display:none;"></div>
     <div class="tts-only" data-i18n="ttsChooseSocial">Kies nu je social.</div>
     <div class="field-label" data-i18n="fieldPlatform">Welk platform</div>
     <div class="platform-grid" id="platformGrid"></div>
@@ -452,6 +490,80 @@
     <div id="histList"></div>
   </main>
 
+  <!-- REGELS -->
+  <main id="tab-regels">
+    <div class="tts-only" data-i18n="ttsRegelsIntro">Je bent op het tabblad Regels. Hier stel je zelf grenzen in, of een ouder doet dat met een PIN-code. Een avondklok, een dagelijkse tijdslimiet, en optioneel de geboortedatum van een kind voor een leeftijdsindicatie. Dit is geen technisch slot, maar een zichtbare afspraak.</div>
+
+    <div class="regels-disclaimer" data-i18n="regelsDisclaimer">Dit is geen technische blokkade. Compagnia kan een platform niet afsluiten of de toegang ertoe weigeren — het geeft alleen een zichtbare herinnering en een herhaald signaal als een afspraak wordt genegeerd. Zodra je ín het platform zelf zit, kan deze app daar niet meer bij. Werkt op basis van vertrouwen en wederzijds respect.</div>
+
+    <div id="pinLockedView" style="display:none;">
+      <div class="lock-notice">
+        <span>🔒</span>
+        <span data-i18n="pinLockedText">Deze regels zijn vergrendeld met een PIN.</span>
+      </div>
+      <div class="pin-entry-row">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="pinUnlockInput" placeholder="••••">
+        <button id="pinUnlockBtn" data-i18n="pinUnlockBtn">Ontgrendelen</button>
+      </div>
+      <div class="pin-error" id="pinUnlockError" style="display:none;" data-i18n="pinWrong">Onjuiste PIN.</div>
+    </div>
+
+    <div id="regelsFieldsView">
+      <div class="field-label" data-i18n="curfewLabel">Avondklok</div>
+      <div class="regels-row">
+        <label class="switch-row"><input type="checkbox" id="curfewEnabled"> <span data-i18n="curfewEnable">Na een bepaalde tijd geen sessie meer starten</span></label>
+        <input type="time" id="curfewTime" value="22:00">
+      </div>
+
+      <div class="field-label" data-i18n="dailyMaxLabel">Maximale schermtijd per dag</div>
+      <div class="regels-row">
+        <label class="switch-row"><input type="checkbox" id="dailyMaxEnabled"> <span data-i18n="dailyMaxEnable">Dagelijkse limiet instellen</span></label>
+        <input type="number" id="dailyMaxInput" min="5" max="600" value="60"> <span data-i18n="minutesWord">minuten</span>
+      </div>
+
+      <div class="field-label" data-i18n="nagLabel">Herhaling bij overtreden afspraak</div>
+      <div class="grid-choices" id="nagIntervalGrid">
+        <div class="chip" data-nag="5">5 min</div>
+        <div class="chip selected" data-nag="10">10 min</div>
+        <div class="chip" data-nag="15">15 min</div>
+      </div>
+
+      <div class="field-label" data-i18n="ageLabel">Leeftijdsindicatie (optioneel)</div>
+      <div class="regels-row">
+        <label class="switch-row"><input type="checkbox" id="ageEnabled"> <span data-i18n="ageEnable">Geboortedatum en minimumleeftijd instellen</span></label>
+      </div>
+      <div class="regels-row" id="ageFieldsRow" style="display:none;">
+        <div>
+          <span class="mini-label" data-i18n="dobLabel">Geboortedatum</span>
+          <input type="date" id="dobInput">
+        </div>
+        <div>
+          <span class="mini-label" data-i18n="minAgeLabel">Minimumleeftijd</span>
+          <input type="number" id="minAgeInput" min="0" max="21" placeholder="13">
+        </div>
+      </div>
+      <div class="hint" data-i18n="ageNote">Elk land hanteert een andere leeftijd voor digitale toestemming — vul in wat voor jullie gezin geldt. Dit is een herinnering, geen leeftijdscontrole door het platform zelf.</div>
+
+      <div class="field-label" data-i18n="pinSectionLabel">PIN-beveiliging (optioneel)</div>
+      <div id="pinSetupView">
+        <div class="regels-row">
+          <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="pinNewInput" placeholder="••••">
+          <button id="pinSetBtn" data-i18n="pinSetBtn">PIN instellen</button>
+        </div>
+        <div class="hint" data-i18n="pinNote">Zonder PIN kan iedereen op dit toestel de regels aanpassen — prima voor zelfopgelegde afspraken. Met PIN kan alleen wie de code kent ze wijzigen.</div>
+      </div>
+      <div id="pinActiveView" style="display:none;">
+        <div class="regels-row">
+          <span data-i18n="pinActiveText">PIN is actief.</span>
+          <button id="pinRemoveBtn" data-i18n="pinRemoveBtn">PIN verwijderen</button>
+        </div>
+      </div>
+
+      <button class="start-btn" id="saveRegelsBtn" data-i18n="saveRegelsBtn">Regels opslaan</button>
+      <div class="hint" id="regelsSavedMsg" style="display:none;" data-i18n="regelsSaved">Opgeslagen.</div>
+    </div>
+  </main>
+
   <footer class="copy" id="copyrightFooter">© <span id="copyYear">2026</span> <span class="app-name">Jan den Hollander</span><span class="divider">|</span><span class="app-name">Compagnia</span><span class="divider">|</span><span data-i18n="footerTerms">Gratis · niet-commercieel · ongewijzigd</span><span class="divider">|</span><button class="license-link" id="licenseBtn" data-i18n="footerLicense">ℹ️ Licentie</button></footer>
 </div>
 
@@ -496,6 +608,7 @@
     <button class="active" data-tab="start"><span class="ic">◐</span><span data-i18n="navStart">Start</span></button>
     <button data-tab="gids"><span class="ic">▤</span><span data-i18n="navGids">Gids</span></button>
     <button data-tab="hist"><span class="ic">≡</span><span data-i18n="navHist">Geschiedenis</span></button>
+    <button data-tab="regels"><span class="ic">🔒</span><span data-i18n="navRegels">Regels</span></button>
   </div>
 </nav>
 
@@ -636,7 +749,7 @@
     nl:{
       eyebrowIntro:'Je bent op de startpagina van Compagnia, de app die je opent voordat je social media gebruikt. Onderaan het scherm staan drie tabbladen: Start, Gids en Geschiedenis. Hier op Start kies je eerst een platform, dan een sessieduur, en druk je daarna op Start sessie.',
       heading:'Voordat je start',
-      purposeBlurb:'Sociale media zijn ontworpen om je aandacht zo lang mogelijk vast te houden: video\'s starten automatisch, je tijdlijn houdt nooit op, meldingen staan standaard aan. Compagnia zet daar iets tegenover — jij bepaalt vooraf hoelang en met welk doel je gaat scrollen.',
+      purposeBlurb:'Sociale media zijn ontworpen om je aandacht zo lang mogelijk vast te houden: video\'s starten automatisch, je tijdlijn houdt nooit op, meldingen staan standaard aan. Compagnia zet daar iets tegenover — jij bepaalt vooraf hoelang en met welk doel je gaat scrollen. Wist je dat je via 🔒 Regels dat gebruik nog gerichter kunt beheren? Zelf, als tiener of volwassene die grenzen wil stellen — of samen met een ouder of verzorger.',
       ttsChooseSocial:'Kies nu je social.',
       fieldPlatform:'Welk platform',
       ttsChooseDuration:'Kies nu de sessieduur.',
@@ -656,6 +769,35 @@
       notifEnableBtn:'Inschakelen',
       notifLimitNote:'Let op: dit werkt alleen als je hierboven meldingen inschakelt. Ook dan kan Android een melding vertragen of missen als je lang in een andere app zit — de melding komt van de browser, niet van YouTube zelf.',
       startConfirmText:'Meldingen staan uit — tik nogmaals om toch te starten',
+      startConfirmMulti:'Let op je afspraken — tik nogmaals om toch te starten',
+      navRegels:'Regels',
+      ttsRegelsIntro:'Je bent op het tabblad Regels. Hier stel je zelf grenzen in, of een ouder doet dat met een PIN-code. Een avondklok, een dagelijkse tijdslimiet, en optioneel de geboortedatum van een kind voor een leeftijdsindicatie. Dit is geen technisch slot, maar een zichtbare afspraak.',
+      regelsDisclaimer:'Dit is geen technische blokkade. Compagnia kan een platform niet afsluiten of de toegang ertoe weigeren — het geeft alleen een zichtbare herinnering en een herhaald signaal als een afspraak wordt genegeerd. Zodra je ín het platform zelf zit, kan deze app daar niet meer bij. Werkt op basis van vertrouwen en wederzijds respect.',
+      pinLockedText:'Deze regels zijn vergrendeld met een PIN.',
+      pinUnlockBtn:'Ontgrendelen',
+      pinWrong:'Onjuiste PIN.',
+      curfewLabel:'Avondklok',
+      curfewEnable:'Na een bepaalde tijd geen sessie meer starten',
+      dailyMaxLabel:'Maximale schermtijd per dag',
+      dailyMaxEnable:'Dagelijkse limiet instellen',
+      nagLabel:'Herhaling bij overtreden afspraak',
+      ageLabel:'Leeftijdsindicatie (optioneel)',
+      ageEnable:'Geboortedatum en minimumleeftijd instellen',
+      dobLabel:'Geboortedatum',
+      minAgeLabel:'Minimumleeftijd',
+      ageNote:'Elk land hanteert een andere leeftijd voor digitale toestemming — vul in wat voor jullie gezin geldt. Dit is een herinnering, geen leeftijdscontrole door het platform zelf.',
+      pinSectionLabel:'PIN-beveiliging (optioneel)',
+      pinSetBtn:'PIN instellen',
+      pinNote:'Zonder PIN kan iedereen op dit toestel de regels aanpassen — prima voor zelfopgelegde afspraken. Met PIN kan alleen wie de code kent ze wijzigen.',
+      pinActiveText:'PIN is actief.',
+      pinRemoveBtn:'PIN verwijderen',
+      saveRegelsBtn:'Regels opslaan',
+      regelsSaved:'Opgeslagen.',
+      warnCurfew:(time)=>`Huisregel: na ${time} geen social meer — tik nogmaals om toch te starten`,
+      warnDailyMax:(max)=>`Je daglimiet van ${max} min is al bereikt — tik nogmaals om toch te starten`,
+      warnAge:(age)=>`Dit platform vraagt doorgaans een minimumleeftijd van ${age} jaar.`,
+      violationNagTitle:'Afspraak wordt genegeerd',
+      violationNagBody:'Je zit nog steeds in een sessie terwijl een huisregel is overtreden.',
       ttsGidsIntro:'Je bent op het tabblad Gids. Hier vind je per platform de instellingen die je zelf handmatig kunt aanpassen, zoals automatisch afspelen en meldingen. Tik op een platform om de tips uit te klappen.',
       gidsNote:'Deze instellingen zitten ín de apps zelf verstopt — Compagnia kan ze niet voor je omzetten, maar wijst je wel de weg.',
       fallbackHint:(name)=>`Ga naar Instellingen → Apps → ${name} → Meldingen op je toestel om de meldingen aan te passen.`,
@@ -690,7 +832,7 @@
     it:{
       eyebrowIntro:'Sei nella pagina iniziale di Compagnia, l\'app che apri prima di usare i social. In basso trovi tre schede: Inizio, Guida e Cronologia. Qui su Inizio scegli prima una piattaforma, poi una durata, e infine premi Avvia sessione.',
       heading:'Prima di iniziare',
-      purposeBlurb:'I social sono progettati per catturare la tua attenzione il più a lungo possibile: i video partono da soli, la timeline non si ferma mai, le notifiche sono attive di default. Compagnia offre un contrappeso — decidi tu, in anticipo, per quanto tempo e con quale scopo scorrere.',
+      purposeBlurb:'I social sono progettati per catturare la tua attenzione il più a lungo possibile: i video partono da soli, la timeline non si ferma mai, le notifiche sono attive di default. Compagnia offre un contrappeso — decidi tu, in anticipo, per quanto tempo e con quale scopo scorrere. Lo sapevi che tramite 🔒 Regole puoi gestire questo utilizzo in modo ancora più mirato? Da solo, come adolescente o adulto che vuole porsi dei limiti — oppure insieme a un genitore o tutore.',
       ttsChooseSocial:'Scegli ora il tuo social.',
       fieldPlatform:'Quale piattaforma',
       ttsChooseDuration:'Scegli ora la durata della sessione.',
@@ -710,6 +852,35 @@
       notifEnableBtn:'Attiva',
       notifLimitNote:'Attenzione: funziona solo se attivi le notifiche qui sopra. Anche così, Android può ritardare o perdere una notifica se resti a lungo in un\'altra app — la notifica arriva dal browser, non da YouTube stesso.',
       startConfirmText:'Notifiche disattivate — tocca di nuovo per avviare comunque',
+      startConfirmMulti:'Attenzione agli accordi — tocca di nuovo per avviare comunque',
+      navRegels:'Regole',
+      ttsRegelsIntro:'Sei nella scheda Regole. Qui imposti tu stesso dei limiti, oppure un genitore lo fa con un codice PIN. Un coprifuoco, un limite di tempo giornaliero, e facoltativamente la data di nascita di un bambino per un\'indicazione di età. Non è un blocco tecnico, ma un accordo visibile.',
+      regelsDisclaimer:'Questo non è un blocco tecnico. Compagnia non può chiudere una piattaforma o negarne l\'accesso — dà solo un promemoria visibile e un segnale ripetuto se un accordo viene ignorato. Una volta che sei dentro la piattaforma stessa, questa app non può più intervenire. Funziona sulla base di fiducia e rispetto reciproco.',
+      pinLockedText:'Queste regole sono protette da un PIN.',
+      pinUnlockBtn:'Sblocca',
+      pinWrong:'PIN errato.',
+      curfewLabel:'Coprifuoco',
+      curfewEnable:'Non avviare più sessioni dopo un certo orario',
+      dailyMaxLabel:'Tempo massimo giornaliero',
+      dailyMaxEnable:'Imposta un limite giornaliero',
+      nagLabel:'Ripetizione se l\'accordo viene ignorato',
+      ageLabel:'Indicazione di età (facoltativa)',
+      ageEnable:'Imposta data di nascita ed età minima',
+      dobLabel:'Data di nascita',
+      minAgeLabel:'Età minima',
+      ageNote:'Ogni paese applica un\'età diversa per il consenso digitale — inserisci quella valida per la tua famiglia. È un promemoria, non un controllo dell\'età da parte della piattaforma stessa.',
+      pinSectionLabel:'Protezione PIN (facoltativa)',
+      pinSetBtn:'Imposta PIN',
+      pinNote:'Senza PIN chiunque su questo dispositivo può modificare le regole — va bene per accordi personali. Con il PIN solo chi conosce il codice può cambiarle.',
+      pinActiveText:'Il PIN è attivo.',
+      pinRemoveBtn:'Rimuovi PIN',
+      saveRegelsBtn:'Salva regole',
+      regelsSaved:'Salvato.',
+      warnCurfew:(time)=>`Regola di famiglia: niente social dopo le ${time} — tocca di nuovo per avviare comunque`,
+      warnDailyMax:(max)=>`Hai già raggiunto il limite giornaliero di ${max} min — tocca di nuovo per avviare comunque`,
+      warnAge:(age)=>`Questa piattaforma richiede solitamente un'età minima di ${age} anni.`,
+      violationNagTitle:'Accordo ignorato',
+      violationNagBody:'Sei ancora in sessione mentre una regola di famiglia è stata superata.',
       ttsGidsIntro:'Sei nella scheda Guida. Qui trovi, per ogni piattaforma, le impostazioni che puoi modificare manualmente, come la riproduzione automatica e le notifiche. Tocca una piattaforma per aprire i suggerimenti.',
       gidsNote:'Queste impostazioni sono nascoste dentro le app stesse — Compagnia non può cambiarle al posto tuo, ma ti indica la strada.',
       fallbackHint:(name)=>`Vai su Impostazioni → App → ${name} → Notifiche sul tuo dispositivo per modificarle.`,
@@ -744,7 +915,7 @@
     fr:{
       eyebrowIntro:'Tu es sur la page d\'accueil de Compagnia, l\'appli que tu ouvres avant d\'utiliser les réseaux sociaux. En bas de l\'écran, trois onglets : Démarrer, Guide et Historique. Ici, sur Démarrer, choisis d\'abord une plateforme, puis une durée, et appuie ensuite sur Démarrer la session.',
       heading:'Avant de commencer',
-      purposeBlurb:'Les réseaux sociaux sont conçus pour capter ton attention le plus longtemps possible : les vidéos démarrent seules, le fil ne s\'arrête jamais, les notifications sont activées par défaut. Compagnia fait contrepoids — c\'est toi qui décides à l\'avance combien de temps et dans quel but tu vas faire défiler.',
+      purposeBlurb:'Les réseaux sociaux sont conçus pour capter ton attention le plus longtemps possible : les vidéos démarrent seules, le fil ne s\'arrête jamais, les notifications sont activées par défaut. Compagnia fait contrepoids — c\'est toi qui décides à l\'avance combien de temps et dans quel but tu vas faire défiler. Savais-tu que via 🔒 Règles tu peux gérer cet usage de façon encore plus ciblée ? Seul, en tant qu\'ado ou adulte qui veut se fixer des limites — ou avec un parent ou tuteur.',
       ttsChooseSocial:'Choisis maintenant ton réseau social.',
       fieldPlatform:'Quelle plateforme',
       ttsChooseDuration:'Choisis maintenant la durée de la session.',
@@ -764,6 +935,35 @@
       notifEnableBtn:'Activer',
       notifLimitNote:'Attention : cela ne fonctionne que si tu actives les notifications ci-dessus. Même ainsi, Android peut retarder ou manquer une notification si tu restes longtemps dans une autre appli — la notification vient du navigateur, pas de YouTube lui-même.',
       startConfirmText:'Notifications désactivées — appuie encore pour démarrer quand même',
+      startConfirmMulti:'Attention à tes accords — appuie encore pour démarrer quand même',
+      navRegels:'Règles',
+      ttsRegelsIntro:'Tu es sur l\'onglet Règles. Tu y fixes toi-même des limites, ou un parent le fait avec un code PIN. Un couvre-feu, une limite de temps quotidienne, et en option la date de naissance d\'un enfant pour une indication d\'âge. Ce n\'est pas un verrou technique, mais un accord visible.',
+      regelsDisclaimer:'Ce n\'est pas un blocage technique. Compagnia ne peut pas fermer une plateforme ni en refuser l\'accès — elle donne seulement un rappel visible et un signal répété si un accord est ignoré. Une fois que tu es dans la plateforme elle-même, cette appli ne peut plus intervenir. Fonctionne sur la base de la confiance et du respect mutuel.',
+      pinLockedText:'Ces règles sont verrouillées par un PIN.',
+      pinUnlockBtn:'Déverrouiller',
+      pinWrong:'PIN incorrect.',
+      curfewLabel:'Couvre-feu',
+      curfewEnable:'Ne plus démarrer de session après une certaine heure',
+      dailyMaxLabel:'Temps d\'écran maximal par jour',
+      dailyMaxEnable:'Définir une limite quotidienne',
+      nagLabel:'Répétition si l\'accord est ignoré',
+      ageLabel:'Indication d\'âge (optionnelle)',
+      ageEnable:'Définir la date de naissance et l\'âge minimum',
+      dobLabel:'Date de naissance',
+      minAgeLabel:'Âge minimum',
+      ageNote:'Chaque pays applique un âge différent pour le consentement numérique — indique celui qui vaut pour ta famille. C\'est un rappel, pas un contrôle d\'âge par la plateforme elle-même.',
+      pinSectionLabel:'Protection par PIN (optionnelle)',
+      pinSetBtn:'Définir un PIN',
+      pinNote:'Sans PIN, n\'importe qui sur cet appareil peut modifier les règles — parfait pour des accords personnels. Avec un PIN, seule la personne qui connaît le code peut les changer.',
+      pinActiveText:'Le PIN est actif.',
+      pinRemoveBtn:'Supprimer le PIN',
+      saveRegelsBtn:'Enregistrer les règles',
+      regelsSaved:'Enregistré.',
+      warnCurfew:(time)=>`Règle familiale : plus de réseaux sociaux après ${time} — appuie encore pour démarrer quand même`,
+      warnDailyMax:(max)=>`Tu as déjà atteint ta limite quotidienne de ${max} min — appuie encore pour démarrer quand même`,
+      warnAge:(age)=>`Cette plateforme demande généralement un âge minimum de ${age} ans.`,
+      violationNagTitle:'Accord ignoré',
+      violationNagBody:'Tu es encore en session alors qu\'une règle familiale a été dépassée.',
       ttsGidsIntro:'Tu es sur l\'onglet Guide. Tu y trouves, par plateforme, les réglages que tu peux ajuster toi-même, comme la lecture automatique et les notifications. Touche une plateforme pour déplier les conseils.',
       gidsNote:'Ces réglages sont cachés dans les applications elles-mêmes — Compagnia ne peut pas les modifier à ta place, mais t\'indique le chemin.',
       fallbackHint:(name)=>`Va dans Paramètres → Applications → ${name} → Notifications sur ton appareil pour les modifier.`,
@@ -798,7 +998,7 @@
     de:{
       eyebrowIntro:'Du bist auf der Startseite von Compagnia, der App, die du öffnest, bevor du soziale Medien nutzt. Unten am Bildschirm gibt es drei Tabs: Start, Anleitung und Verlauf. Hier auf Start wählst du zuerst eine Plattform, dann eine Sitzungsdauer, und drückst danach auf Sitzung starten.',
       heading:'Bevor du startest',
-      purposeBlurb:'Soziale Medien sind darauf ausgelegt, deine Aufmerksamkeit so lange wie möglich zu binden: Videos starten von selbst, die Timeline endet nie, Benachrichtigungen sind standardmäßig an. Compagnia setzt dem etwas entgegen — du entscheidest vorher, wie lange und mit welchem Ziel du scrollst.',
+      purposeBlurb:'Soziale Medien sind darauf ausgelegt, deine Aufmerksamkeit so lange wie möglich zu binden: Videos starten von selbst, die Timeline endet nie, Benachrichtigungen sind standardmäßig an. Compagnia setzt dem etwas entgegen — du entscheidest vorher, wie lange und mit welchem Ziel du scrollst. Wusstest du, dass du über 🔒 Regeln dieses Verhalten noch gezielter steuern kannst? Selbst, als Teenager oder Erwachsener, der sich Grenzen setzen will — oder gemeinsam mit einem Elternteil.',
       ttsChooseSocial:'Wähle jetzt dein soziales Netzwerk.',
       fieldPlatform:'Welche Plattform',
       ttsChooseDuration:'Wähle jetzt die Sitzungsdauer.',
@@ -818,6 +1018,35 @@
       notifEnableBtn:'Aktivieren',
       notifLimitNote:'Achtung: Das funktioniert nur, wenn du oben Benachrichtigungen aktivierst. Auch dann kann Android eine Benachrichtigung verzögern oder verpassen, wenn du lange in einer anderen App bist — die Benachrichtigung kommt vom Browser, nicht von YouTube selbst.',
       startConfirmText:'Benachrichtigungen sind aus — nochmal tippen, um trotzdem zu starten',
+      startConfirmMulti:'Achte auf deine Abmachungen — nochmal tippen, um trotzdem zu starten',
+      navRegels:'Regeln',
+      ttsRegelsIntro:'Du bist im Tab Regeln. Hier legst du selbst Grenzen fest, oder ein Elternteil tut das mit einem PIN-Code. Eine Ausgehsperre, ein tägliches Zeitlimit, und optional das Geburtsdatum eines Kindes für einen Altershinweis. Das ist kein technisches Schloss, sondern eine sichtbare Abmachung.',
+      regelsDisclaimer:'Das ist keine technische Sperre. Compagnia kann eine Plattform nicht schließen oder den Zugang verweigern — es gibt nur eine sichtbare Erinnerung und ein wiederholtes Signal, wenn eine Abmachung ignoriert wird. Sobald du in der Plattform selbst bist, kann diese App nicht mehr eingreifen. Basiert auf Vertrauen und gegenseitigem Respekt.',
+      pinLockedText:'Diese Regeln sind mit einem PIN gesperrt.',
+      pinUnlockBtn:'Entsperren',
+      pinWrong:'Falscher PIN.',
+      curfewLabel:'Ausgehsperre',
+      curfewEnable:'Nach einer bestimmten Uhrzeit keine Sitzung mehr starten',
+      dailyMaxLabel:'Maximale Bildschirmzeit pro Tag',
+      dailyMaxEnable:'Tägliches Limit festlegen',
+      nagLabel:'Wiederholung bei ignorierter Abmachung',
+      ageLabel:'Altershinweis (optional)',
+      ageEnable:'Geburtsdatum und Mindestalter festlegen',
+      dobLabel:'Geburtsdatum',
+      minAgeLabel:'Mindestalter',
+      ageNote:'Jedes Land verwendet ein anderes Alter für die digitale Einwilligung — trage ein, was für eure Familie gilt. Das ist eine Erinnerung, keine Altersprüfung durch die Plattform selbst.',
+      pinSectionLabel:'PIN-Schutz (optional)',
+      pinSetBtn:'PIN festlegen',
+      pinNote:'Ohne PIN kann jeder auf diesem Gerät die Regeln ändern — gut für selbst auferlegte Abmachungen. Mit PIN kann nur ändern, wer den Code kennt.',
+      pinActiveText:'PIN ist aktiv.',
+      pinRemoveBtn:'PIN entfernen',
+      saveRegelsBtn:'Regeln speichern',
+      regelsSaved:'Gespeichert.',
+      warnCurfew:(time)=>`Hausregel: nach ${time} keine sozialen Medien mehr — nochmal tippen, um trotzdem zu starten`,
+      warnDailyMax:(max)=>`Dein Tageslimit von ${max} min ist schon erreicht — nochmal tippen, um trotzdem zu starten`,
+      warnAge:(age)=>`Diese Plattform verlangt meist ein Mindestalter von ${age} Jahren.`,
+      violationNagTitle:'Abmachung wird ignoriert',
+      violationNagBody:'Du bist noch in einer Sitzung, obwohl eine Hausregel überschritten wurde.',
       ttsGidsIntro:'Du bist im Tab Anleitung. Hier findest du pro Plattform die Einstellungen, die du selbst manuell anpassen kannst, wie Autoplay und Benachrichtigungen. Tippe auf eine Plattform, um die Tipps aufzuklappen.',
       gidsNote:'Diese Einstellungen sind in den Apps selbst versteckt — Compagnia kann sie nicht für dich ändern, zeigt dir aber den Weg.',
       fallbackHint:(name)=>`Gehe auf deinem Gerät zu Einstellungen → Apps → ${name} → Benachrichtigungen, um sie anzupassen.`,
@@ -861,6 +1090,9 @@
   let stoppedEarly = false;
   let alarmLoopId = null;
   let alarmSafetyTimeout = null;
+  let regelsUnlocked = false;
+  let violationNagId = null;
+  let sessionRuleViolation = false;
 
   const $ = (id) => document.getElementById(id);
 
@@ -872,6 +1104,8 @@
       btn.classList.add('active');
       $('tab-'+btn.dataset.tab).classList.add('active');
       if(btn.dataset.tab==='hist') renderHistory();
+      if(btn.dataset.tab==='regels') renderRegelsTab();
+      else regelsUnlocked = false;
     });
   });
 
@@ -950,29 +1184,209 @@
   // ---------- START SESSIE ----------
   let startConfirmPending = false;
   $('startBtn').addEventListener('click', ()=>{
-    const permOk = ('Notification' in window) && Notification.permission === 'granted';
-    if(!permOk && !startConfirmPending){
+    const {warnings, ruleViolation} = getStartWarnings();
+    if(warnings.length && !startConfirmPending){
       startConfirmPending = true;
       $('startBtn').classList.add('confirm-pending');
-      $('startBtn').textContent = TR[currentLang].startConfirmText;
-      $('notifStatus').scrollIntoView({behavior:'smooth', block:'center'});
+      $('startBtn').textContent = warnings.length > 1 ? TR[currentLang].startConfirmMulti : warnings[0];
+      if(!(('Notification' in window) && Notification.permission === 'granted')){
+        $('notifStatus').scrollIntoView({behavior:'smooth', block:'center'});
+      }
       setTimeout(()=>{
         startConfirmPending = false;
         $('startBtn').classList.remove('confirm-pending');
         $('startBtn').textContent = TR[currentLang].startBtn;
-      }, 4000);
+      }, 5000);
       return;
     }
     startConfirmPending = false;
     $('startBtn').classList.remove('confirm-pending');
     $('startBtn').textContent = TR[currentLang].startBtn;
-    startSession();
+    startSession(ruleViolation);
   });
 
-  function startSession(){
+  function loadRules(){
+    try{ return JSON.parse(localStorage.getItem('compagnia_rules')) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveRules(r){ localStorage.setItem('compagnia_rules', JSON.stringify(r)); }
+
+  function todayTotalMinutes(){
+    const list = JSON.parse(localStorage.getItem('voordat_sessions')||'[]');
+    const todayStr = new Date().toDateString();
+    return list.filter(x=> new Date(x.ts).toDateString()===todayStr).reduce((s,x)=>s+x.minutes,0);
+  }
+
+  function computeAge(dobStr){
+    const dob = new Date(dobStr);
+    const now = new Date();
+    let age = now.getFullYear() - dob.getFullYear();
+    const m = now.getMonth() - dob.getMonth();
+    if(m<0 || (m===0 && now.getDate()<dob.getDate())) age--;
+    return age;
+  }
+
+  function getStartWarnings(){
+    const r = loadRules();
+    const t = TR[currentLang];
+    const warnings = [];
+    let ruleViolation = false;
+
+    if(!(('Notification' in window) && Notification.permission === 'granted')){
+      warnings.push(t.startConfirmText);
+    }
+    if(r.curfewEnabled && r.curfewTime){
+      const now = new Date();
+      const [h,m] = r.curfewTime.split(':').map(Number);
+      const nowMin = now.getHours()*60 + now.getMinutes();
+      if(nowMin >= (h*60+m)){
+        warnings.push(t.warnCurfew(r.curfewTime));
+        ruleViolation = true;
+      }
+    }
+    if(r.dailyMaxEnabled && r.dailyMaxMin){
+      const projected = todayTotalMinutes() + selectedMinutes;
+      if(projected > r.dailyMaxMin){
+        warnings.push(t.warnDailyMax(r.dailyMaxMin));
+        ruleViolation = true;
+      }
+    }
+    return {warnings, ruleViolation};
+  }
+
+  function getAgeNote(){
+    const r = loadRules();
+    if(r.ageEnabled && r.dob && r.minAge){
+      const age = computeAge(r.dob);
+      if(age < r.minAge) return TR[currentLang].warnAge(r.minAge);
+    }
+    return null;
+  }
+
+  function updateAgeNoteBanner(){
+    const note = getAgeNote();
+    const el = $('ageNoteBanner');
+    if(note){
+      el.textContent = note;
+      el.style.display = 'block';
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
+  function startViolationNagLoop(){
+    stopViolationNagLoop();
+    const r = loadRules();
+    const intervalMin = r.nagInterval || 10;
+    violationNagId = setInterval(()=>{
+      playAlarmBeepCycle();
+      try{
+        if(Notification && Notification.permission==='granted'){
+          const t = TR[currentLang];
+          new Notification(t.violationNagTitle, {body: t.violationNagBody});
+        }
+      }catch(e){}
+    }, intervalMin*60000);
+  }
+  function stopViolationNagLoop(){
+    if(violationNagId){ clearInterval(violationNagId); violationNagId = null; }
+  }
+
+  function renderRegelsTab(){
+    const r = loadRules();
+    $('curfewEnabled').checked = !!r.curfewEnabled;
+    $('curfewTime').value = r.curfewTime || '22:00';
+    $('dailyMaxEnabled').checked = !!r.dailyMaxEnabled;
+    $('dailyMaxInput').value = r.dailyMaxMin || 60;
+    $('ageEnabled').checked = !!r.ageEnabled;
+    $('ageFieldsRow').style.display = r.ageEnabled ? 'flex' : 'none';
+    $('dobInput').value = r.dob || '';
+    $('minAgeInput').value = r.minAge || '';
+    document.querySelectorAll('#nagIntervalGrid .chip').forEach(c=>{
+      c.classList.toggle('selected', Number(c.dataset.nag) === (r.nagInterval||10));
+    });
+
+    if(r.pin && !regelsUnlocked){
+      $('pinLockedView').style.display = 'block';
+      $('regelsFieldsView').style.display = 'none';
+    } else {
+      $('pinLockedView').style.display = 'none';
+      $('regelsFieldsView').style.display = 'block';
+    }
+
+    if(r.pin){
+      $('pinSetupView').style.display = 'none';
+      $('pinActiveView').style.display = 'block';
+    } else {
+      $('pinSetupView').style.display = 'block';
+      $('pinActiveView').style.display = 'none';
+    }
+  }
+
+  $('ageEnabled').addEventListener('change', ()=>{
+    $('ageFieldsRow').style.display = $('ageEnabled').checked ? 'flex' : 'none';
+  });
+
+  document.querySelectorAll('#nagIntervalGrid .chip').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      document.querySelectorAll('#nagIntervalGrid .chip').forEach(x=>x.classList.remove('selected'));
+      c.classList.add('selected');
+    });
+  });
+
+  $('pinUnlockBtn').addEventListener('click', ()=>{
+    const r = loadRules();
+    if($('pinUnlockInput').value === r.pin){
+      regelsUnlocked = true;
+      $('pinUnlockError').style.display = 'none';
+      $('pinUnlockInput').value = '';
+      renderRegelsTab();
+    } else {
+      $('pinUnlockError').style.display = 'block';
+    }
+  });
+
+  $('pinSetBtn').addEventListener('click', ()=>{
+    const val = $('pinNewInput').value.trim();
+    if(val.length >= 4){
+      const r = loadRules();
+      r.pin = val;
+      saveRules(r);
+      regelsUnlocked = true;
+      $('pinNewInput').value = '';
+      renderRegelsTab();
+    }
+  });
+
+  $('pinRemoveBtn').addEventListener('click', ()=>{
+    const r = loadRules();
+    delete r.pin;
+    saveRules(r);
+    renderRegelsTab();
+  });
+
+  $('saveRegelsBtn').addEventListener('click', ()=>{
+    const r = loadRules();
+    r.curfewEnabled = $('curfewEnabled').checked;
+    r.curfewTime = $('curfewTime').value;
+    r.dailyMaxEnabled = $('dailyMaxEnabled').checked;
+    r.dailyMaxMin = Number($('dailyMaxInput').value) || 60;
+    r.ageEnabled = $('ageEnabled').checked;
+    r.dob = $('dobInput').value;
+    r.minAge = Number($('minAgeInput').value) || null;
+    const selectedNag = document.querySelector('#nagIntervalGrid .chip.selected');
+    r.nagInterval = selectedNag ? Number(selectedNag.dataset.nag) : 10;
+    saveRules(r);
+    $('regelsSavedMsg').style.display = 'block';
+    updateAgeNoteBanner();
+    setTimeout(()=> $('regelsSavedMsg').style.display = 'none', 2500);
+  });
+
+  function startSession(ruleViolation){
     sessionStartTs = Date.now();
     sessionEnd = sessionStartTs + selectedMinutes*60000;
     stoppedEarly = false;
+    sessionRuleViolation = !!ruleViolation;
 
     $('sessiePlatform').textContent = platformLabel(selectedPlatform);
     const link = $('openSocialBtn');
@@ -986,6 +1400,7 @@
     $('sessieOverlay').classList.add('active');
     tickTimer();
     timerInterval = setInterval(tickTimer, 1000);
+    if(sessionRuleViolation) startViolationNagLoop();
   }
 
   function tickTimer(){
@@ -1021,12 +1436,14 @@
 
   $('stopBtn').addEventListener('click', ()=>{
     clearInterval(timerInterval);
+    stopViolationNagLoop();
     stoppedEarly = true;
     finishSession(false);
   });
 
   function finishSession(completed){
     $('sessieOverlay').classList.remove('active');
+    stopViolationNagLoop();
     logSession(completed);
 
     if(completed){
@@ -1088,7 +1505,7 @@
   $('eindeAgain').addEventListener('click', ()=>{
     stopAlarmLoop();
     $('eindeOverlay').classList.remove('active');
-    startSession();
+    startSession(sessionRuleViolation);
   });
 
   // ---------- HISTORIE ----------
@@ -1282,6 +1699,8 @@
     renderGidsList();
     renderHistory();
     updateNotifStatusUI();
+    updateAgeNoteBanner();
+    if(document.getElementById('tab-regels').classList.contains('active')) renderRegelsTab();
   }
 
   // ---------- MELDINGSTOESTEMMING ----------
