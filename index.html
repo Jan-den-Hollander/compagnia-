@@ -1465,9 +1465,20 @@
     startAlarmLoop(); // hoorbaar zolang deze tab actief/voorgrond is; browsers dempen audio in achtergrondtabs
   }
 
+  let sharedAudioCtx = null;
+  function getAudioCtx(){
+    if(!sharedAudioCtx){
+      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(sharedAudioCtx.state === 'suspended'){
+      sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+  }
+
   function playAlarmBeepCycle(){
     try{
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getAudioCtx();
       const beeps = [0, 0.35, 0.7, 1.05, 1.4, 1.75];
       beeps.forEach(t=>{
         const osc = ctx.createOscillator();
