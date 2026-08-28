@@ -204,11 +204,11 @@
   .notif-status.needs-action{
     border-color:var(--danger);
     background:rgba(201,106,90,.1);
-    animation:notifPulse 1.6s ease-in-out infinite;
+    animation:notifPulse 1.2s ease-in-out 3; /* kort en eindig i.p.v. oneindig — box-shadow-animaties zijn duur om eeuwig te laten lopen */
   }
   @keyframes notifPulse{
-    0%,100%{box-shadow:0 0 0 0 rgba(201,106,90,.35);}
-    50%{box-shadow:0 0 0 6px rgba(201,106,90,0);}
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.015);}
   }
   .notif-status button{
     margin-left:auto; background:var(--accent); color:#181205; border:none;
@@ -1290,6 +1290,7 @@
   }
   function stopViolationNagLoop(){
     if(violationNagId){ clearInterval(violationNagId); violationNagId = null; }
+    suspendAudioCtxIfIdle();
   }
 
   function renderRegelsTab(){
@@ -1507,6 +1508,15 @@
   function stopAlarmLoop(){
     if(alarmLoopId){ clearInterval(alarmLoopId); alarmLoopId = null; }
     if(alarmSafetyTimeout){ clearTimeout(alarmSafetyTimeout); alarmSafetyTimeout = null; }
+    suspendAudioCtxIfIdle();
+  }
+
+  function suspendAudioCtxIfIdle(){
+    // pauzeert de gedeelde audio-context zodra geen enkele alarm-lus meer draait,
+    // zodat er geen achtergrond-audiosessie blijft openstaan tussen alarmen door
+    if(sharedAudioCtx && !alarmLoopId && !violationNagId && sharedAudioCtx.state === 'running'){
+      sharedAudioCtx.suspend().catch(()=>{});
+    }
   }
 
   $('eindeClose').addEventListener('click', ()=>{
