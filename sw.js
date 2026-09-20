@@ -4,7 +4,7 @@
   Ophogen van CACHE (bijv. compagnia-v2) dwingt een volledige verversing af.
 */
 const CACHE = 'compagnia-v1';
-const PRECACHE = ['./', 'index.html', 'manifest.json', 'icons/icon-192.png'];
+const PRECACHE = ['./', 'index.html', 'manifest.json', 'icons/icon-192.png', 'icons/icon-512.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
