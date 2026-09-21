@@ -1,6 +1,6 @@
 # Compagnia — Voordat
 
-Een companion die je opent vóór je social media gebruikt: kies het platform en hoe lang je wilt blijven, en bekijk per platform welke instellingen (zoals automatisch afspelen en meldingen) je zelf kunt aanpassen. In het Nederlands, Italiaans, Frans en Duits.
+NL-Een companion die je opent vóór je social media gebruikt: kies het platform en hoe lang je wilt blijven, en bekijk per platform welke instellingen (zoals automatisch afspelen en meldingen) je zelf kunt aanpassen. In het Nederlands, Italiaans, Frans en Duits.
 
 IT-Un compagno da aprire prima di usare i social: scegli la piattaforma e per quanto tempo vuoi restare, e scopri per ogni piattaforma quali impostazioni (come la riproduzione automatica e le notifiche) puoi modificare da solo. In olandese, italiano, francese e tedesco.
 
